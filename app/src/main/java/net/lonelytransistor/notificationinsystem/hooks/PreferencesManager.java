@@ -63,6 +63,8 @@ public class PreferencesManager {
         NotificationFilter(Set<String> channels, String regex, int slot, int width, int height, boolean hide) {
             this.channels = channels;
             this.regex = Pattern.compile(regex);
+            slot = Math.max(slot, 0);
+            slot = Math.min(slot, StatusBarIconControllerImpl.getMaxSlots()-1);
             this.slot = slot;
             this.width = width;
             this.height = height;

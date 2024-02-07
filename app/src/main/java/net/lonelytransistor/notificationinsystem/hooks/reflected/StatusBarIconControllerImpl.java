@@ -8,6 +8,7 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class StatusBarIconControllerImpl {
     @SuppressLint("StaticFieldLeak")
     static Context context = null;
     static Map<Integer, Set<StatusBarIconHolder>> ownIcons = new HashMap<>();
+    private static int maxSlots = 0;
 
     static void init(Object self_) {
         self = self_;
@@ -108,6 +110,16 @@ public class StatusBarIconControllerImpl {
         for (StatusBarIconHolder holder : icons) {
             removeIcon(index, holder);
         }
+    }
+    public static int getMaxSlots() {
+        if (self == null)
+            return 0;
+        if (maxSlots <= 0) {
+            ArrayList<Object> slots = (ArrayList<Object>) XposedHelpers.callMethod(self, "getSlots");
+            maxSlots = slots.size();
+        }
+
+        return maxSlots;
     }
     public static int getSlotIndex(String name) {
         if (self == null)
