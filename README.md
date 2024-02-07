@@ -5,9 +5,17 @@ This module allows you to move certain notification icons into the right side of
 
 Why? Because I wanted to have the battery in circle again and I was annoyed with custom ROMs seemingly dropping this altogether.
 
-**Discussion/Support:** [XDA thread](https://forum.xda-developers.com/t/mod-xposed-app-settings-reborn.4141339)
+**Setup:**
+
+Seems arbitrary, but the app requires access to notifications as well as access to a random device to become a Device Manager and access the notification categories. After that step, the configuration is easy - just expand the requested app, select notification categories you want, add a regex filter or not, declare the icon size and select the icon's new position in the SystemUI. The slot index should be positive and not exceed a certain device dependant value, which you have to guess.
+
+---
+
+**Discussion/Support:**
+[XDA thread](https://xdaforums.com/t/mod-xposed-systemui-notifier.4655159)
 
 **Compatibility:**
+
 The application was tested only on Android 11 AOSP, Android 11, 12 OneUI.
 
 This module is provided as is without any promise of support. But I do welcome pull requests.
@@ -15,9 +23,8 @@ This module is provided as is without any promise of support. But I do welcome p
 The tasker profile accomplishing the battery circle is within the repo: [TaskerProfile.prj.xml](/TaskerProfile.prj.xml)
 
 **Screenshots:**
-![Settings](/screeshots/settings.jpg)
-![Hidden notification](/screeshots/hidden_notification.jpg)
-![Visible notification](/screeshots/shown_notification.jpg)
+
+<img src="/screenshots/settings.jpg" style="height:40vh;"/><img src="/screenshots/hidden_notification.jpg" style="height:40vh;"/><img src="/screenshots/shown_notification.jpg" style="height:40vh;"/>
 
 License
 -------
