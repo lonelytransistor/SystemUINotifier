@@ -55,15 +55,13 @@ android {
         if (this.buildType.isDebuggable.not()) {
             outputs.all {
                 this as com.android.build.gradle.internal.api.ApkVariantOutputImpl
-                outputFileName = "App Settings Reborn v${versionName}.apk"
+                outputFileName = "SystemUI Notifier v${versionName}.apk"
             }
         }
     }
 }
 
 dependencies {
-    //noinspection GradleDependency
-    implementation ("com.mikepenz:materialdrawer:6.1.2")
     implementation ("androidx.appcompat:appcompat:1.6.1")
 
     implementation(project(mapOf("path" to ":commonlib")))
