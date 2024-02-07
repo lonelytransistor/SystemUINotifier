@@ -15,7 +15,6 @@ import net.lonelytransistor.notificationinsystem.Constants;
 import net.lonelytransistor.notificationinsystem.hooks.reflected.NotificationIconAreaController;
 import net.lonelytransistor.notificationinsystem.hooks.reflected.StatusBarIconControllerImpl;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -63,8 +62,6 @@ public class PreferencesManager {
         NotificationFilter(Set<String> channels, String regex, int slot, int width, int height, boolean hide) {
             this.channels = channels;
             this.regex = Pattern.compile(regex);
-            slot = Math.max(slot, 0);
-            slot = Math.min(slot, StatusBarIconControllerImpl.getMaxSlots()-1);
             this.slot = slot;
             this.width = width;
             this.height = height;

@@ -2,12 +2,6 @@ package net.lonelytransistor.notificationinsystem.hooks.reflected;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
-
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,7 +16,6 @@ public class StatusBarIconControllerImpl {
     @SuppressLint("StaticFieldLeak")
     static Context context = null;
     static Map<Integer, Set<StatusBarIconHolder>> ownIcons = new HashMap<>();
-    private static int maxSlots = 0;
 
     static void init(Object self_) {
         self = self_;
@@ -55,7 +48,7 @@ public class StatusBarIconControllerImpl {
         icons.add(holder);
 
         XposedHelpers.callMethod(self, "setIcon",
-                index, holder.self);
+                clampSlot(index), holder.self);
     }
 
     private static StatusBarIconHolder getHolder(int index, int uid, int tag) {
@@ -90,7 +83,7 @@ public class StatusBarIconControllerImpl {
         ownIcons.get(index).remove(holder);
 
         XposedHelpers.callMethod(self, "removeIcon",
-                index, holder.tag);
+                clampSlot(index), holder.tag);
     }
     public static void removeAllOwnIcons() {
         for (int slot : ownIcons.keySet()) {
@@ -105,21 +98,21 @@ public class StatusBarIconControllerImpl {
 
         if (!ownIcons.containsKey(index))
             ownIcons.put(index, new HashSet<>());
-        Set<StatusBarIconHolder> icons = new HashSet<>();
-        icons.addAll(ownIcons.get(index));
+        Set<StatusBarIconHolder> icons = new HashSet<>(ownIcons.get(index));
         for (StatusBarIconHolder holder : icons) {
-            removeIcon(index, holder);
+            removeIcon(clampSlot(index), holder);
         }
+    }
+    private static int clampSlot(int slot) {
+        slot = Math.max(slot, 0);
+        slot = Math.min(slot, getMaxSlots()-1);
+        return slot;
     }
     public static int getMaxSlots() {
         if (self == null)
             return 0;
-        if (maxSlots <= 0) {
-            ArrayList<Object> slots = (ArrayList<Object>) XposedHelpers.callMethod(self, "getSlots");
-            maxSlots = slots.size();
-        }
-
-        return maxSlots;
+        ArrayList<Object> slots = (ArrayList<Object>) XposedHelpers.callMethod(self, "getSlots");
+        return slots.size();
     }
     public static int getSlotIndex(String name) {
         if (self == null)
@@ -133,7 +126,7 @@ public class StatusBarIconControllerImpl {
             return null;
 
         return (String) XposedHelpers.callMethod(self, "getSlotName",
-                index);
+                clampSlot(index));
     }
     public static void removeAllIconsInSlot(int index) {
         if (self == null)
