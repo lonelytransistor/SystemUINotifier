@@ -1,0 +1,273 @@
+<TaskerData sr="" dvi="1" tv="6.3.1-beta">
+	<Profile sr="prof31" ve="2">
+		<cdate>1707073315485</cdate>
+		<clp>true</clp>
+		<edate>1707073364222</edate>
+		<flags>8</flags>
+		<id>31</id>
+		<mid0>41</mid0>
+		<nme>Battery Charging</nme>
+		<State sr="con0" ve="2">
+			<code>10</code>
+			<Int sr="arg0" val="0"/>
+		</State>
+	</Profile>
+	<Profile sr="prof32" ve="2">
+		<cdate>1707073322234</cdate>
+		<clp>true</clp>
+		<edate>1707073371889</edate>
+		<flags>8</flags>
+		<id>32</id>
+		<mid0>41</mid0>
+		<nme>Battery Discharging</nme>
+		<State sr="con0" ve="2">
+			<code>10</code>
+			<pin>true</pin>
+			<Int sr="arg0" val="0"/>
+		</State>
+	</Profile>
+	<Profile sr="prof36" ve="2">
+		<cdate>1707073594603</cdate>
+		<clp>true</clp>
+		<edate>1707073683819</edate>
+		<flags>8</flags>
+		<id>36</id>
+		<mid0>34</mid0>
+		<nme>Headphones Plugged</nme>
+		<State sr="con0" ve="2">
+			<code>30</code>
+			<Int sr="arg0" val="1"/>
+		</State>
+	</Profile>
+	<Profile sr="prof37" ve="2">
+		<cdate>1707073602421</cdate>
+		<clp>true</clp>
+		<edate>1707073691759</edate>
+		<flags>8</flags>
+		<id>37</id>
+		<mid0>35</mid0>
+		<nme>Headset Plugged</nme>
+		<State sr="con0" ve="2">
+			<code>30</code>
+			<Int sr="arg0" val="2"/>
+		</State>
+	</Profile>
+	<Profile sr="prof40" ve="2">
+		<cdate>1707073664697</cdate>
+		<clp>true</clp>
+		<edate>1707073675881</edate>
+		<flags>8</flags>
+		<id>40</id>
+		<mid0>39</mid0>
+		<nme>Headset Unplugged</nme>
+		<State sr="con0" ve="2">
+			<code>30</code>
+			<pin>true</pin>
+			<Int sr="arg0" val="0"/>
+		</State>
+	</Profile>
+	<Profile sr="prof42" ve="2">
+		<cdate>1707073778135</cdate>
+		<clp>true</clp>
+		<edate>1707073915424</edate>
+		<flags>8</flags>
+		<id>42</id>
+		<mid0>41</mid0>
+		<nme>Battery Level</nme>
+		<Event sr="con0" ve="2">
+			<code>203</code>
+		</Event>
+	</Profile>
+	<Project sr="proj0" ve="2">
+		<cdate>1707073194944</cdate>
+		<name>SystemUI Icons</name>
+		<pids>42,32,31,40,37,36</pids>
+		<tids>39,41,10,35,34</tids>
+	</Project>
+	<Task sr="task10">
+		<cdate>1707183315548</cdate>
+		<edate>1707236293642</edate>
+		<id>10</id>
+		<nme>Battery Circle Dismiss</nme>
+		<pri>100</pri>
+		<Action sr="act0" ve="7">
+			<code>779</code>
+			<Str sr="arg0" ve="3">Battery Level</Str>
+			<Int sr="arg1" val="0"/>
+		</Action>
+	</Task>
+	<Task sr="task34">
+		<cdate>1707073488361</cdate>
+		<edate>1707256464517</edate>
+		<id>34</id>
+		<nme>Headset Mic On</nme>
+		<pri>100</pri>
+		<Action sr="act0" ve="7">
+			<code>523</code>
+			<Str sr="arg0" ve="3">Headset</Str>
+			<Str sr="arg1" ve="3"/>
+			<Str sr="arg10" ve="3"/>
+			<Str sr="arg11" ve="3">SystemUI</Str>
+			<Img sr="arg2" ve="2">
+				<nme>mw_hardware_headset_m</nme>
+			</Img>
+			<Int sr="arg3" val="0"/>
+			<Int sr="arg4" val="1"/>
+			<Int sr="arg5" val="1"/>
+			<Int sr="arg6" val="0"/>
+			<Int sr="arg7" val="0"/>
+			<Int sr="arg8" val="0"/>
+			<Str sr="arg9" ve="3"/>
+		</Action>
+	</Task>
+	<Task sr="task35">
+		<cdate>1707073529570</cdate>
+		<edate>1707073555095</edate>
+		<id>35</id>
+		<nme>Headset NoMic On</nme>
+		<Action sr="act0" ve="7">
+			<code>523</code>
+			<Str sr="arg0" ve="3">Headset</Str>
+			<Str sr="arg1" ve="3"/>
+			<Str sr="arg10" ve="3"/>
+			<Str sr="arg11" ve="3">SystemUI</Str>
+			<Img sr="arg2" ve="2">
+				<nme>mw_hardware_headset</nme>
+			</Img>
+			<Int sr="arg3" val="0"/>
+			<Int sr="arg4" val="1"/>
+			<Int sr="arg5" val="1"/>
+			<Int sr="arg6" val="0"/>
+			<Int sr="arg7" val="0"/>
+			<Int sr="arg8" val="0"/>
+			<Str sr="arg9" ve="3"/>
+		</Action>
+	</Task>
+	<Task sr="task39">
+		<cdate>1707073636342</cdate>
+		<edate>1707256452905</edate>
+		<id>39</id>
+		<nme>Headset Off</nme>
+		<pri>100</pri>
+		<Action sr="act0" ve="7">
+			<code>779</code>
+			<Str sr="arg0" ve="3">Headset</Str>
+			<Int sr="arg1" val="0"/>
+		</Action>
+	</Task>
+	<Task sr="task41">
+		<cdate>1707073721685</cdate>
+		<edate>1707312899756</edate>
+		<id>41</id>
+		<nme>Battery Circle</nme>
+		<pri>100</pri>
+		<Action sr="act0" ve="7">
+			<code>424</code>
+			<Bundle sr="arg0">
+				<Vals sr="val">
+					<net.dinglisch.android.tasker.RELEVANT_VARIABLES>&lt;StringArray sr=""&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES0&gt;%bi_level
+01. Level
+The current battery level, from 0 to scale&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES0&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES1&gt;%bi_scale
+02. Scale
+The maximum battery level&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES1&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES2&gt;%bi_status
+03. Status
+1=Unknown; 2=Charging; 3=Discharging; 4=Not Charging; 5=Full;&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES2&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES3&gt;%bi_status_string
+04. Status Description
+&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES3&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES4&gt;%bi_temperature
+05. Temperature
+Current battery temperature in degree Celsius. May always show as 0 on some devices.&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES4&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES5&gt;%bi_power_source
+06. Power Source
+1=AC; 2=USB; 4=Wireless; 8=Dock;&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES5&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES6&gt;%bi_power_source_string
+07. Power Source Description
+&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES6&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES7&gt;%bi_health
+08. Battery Health
+1=Unknown; 2=Good; 3=Overheat; 4=Dead; 5=Over Voltage; 6=Failure;&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES7&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES8&gt;%bi_time_until_charged
+08. Time Until Charged
+Approximate time (MS) remaining until the battery is fully charged or -1 if not possible to get&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES8&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES9&gt;%bi_health_string
+09. Battery Health Description
+&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES9&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES10&gt;%bi_battery_low
+10. Battery Low
+true if device battery level is low (corresponds to the Low battery warning system dialog), false otherwise&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES10&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES11&gt;%bi_voltage
+11. Voltage
+Current battery voltage in millivolts&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES11&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES12&gt;%bi_present
+12. Present
+true if device has a battery, false otherwise&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES12&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES13&gt;%bi_technology
+13. Technology
+Description of the technology of the current battery&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES13&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES14&gt;%bi_capacity_percentage
+14. Capacity Percentage
+Remaining battery capacity percentage&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES14&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES15&gt;%bi_capacity
+15. Capacity
+Battery capacity in microampere-hours&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES15&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES16&gt;%bi_current_average
+16. Average Current
+Average battery current in microamperes. Can be positive (charging) or negative (discharging)&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES16&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES17&gt;%bi_current_now
+17. Instantaneous Current
+Instantaneous battery current in microamperes. Can be positive (charging) or negative (discharging)&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES17&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES18&gt;%bi_energy_counter
+18. Energy Counter
+Battery remaining energy in nanowatt-hours&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES18&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES19&gt;%bi_adaptive_charging_enabled
+19. Adaptive Charging Enabled
+true if adaptive charging is enabled on your device, false if not. May not be correct on all devices.&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES19&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES20&gt;%bi_manufacturing_date
+19. Battery Manufacturing Date
+Seconds Since Epoch&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES20&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES21&gt;%bi_adaptive_battery_management_enabled
+20. Adaptive Battery Enabled
+true if the "Adaptive Battery" setting is enabled on your phone, false if not. May not be correct on all devices.&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES21&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES22&gt;%bi_first_usage_date
+20. Battery First Usage Date
+Seconds Since Epoch&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES22&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES23&gt;%bi_charging_policy
+21. Battery Charging Policy
+1=Default; 2=Adaptive Static; 3=Adaptive Dynamic; 4=Adaptive Long Life;&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES23&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES24&gt;%bi_state_of_health
+22. Battery State of Health
+Percentage representing the measured battery state of health (remaining estimated full charge capacity relative to the rated capacity in %)&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES24&gt;&lt;/StringArray&gt;</net.dinglisch.android.tasker.RELEVANT_VARIABLES>
+					<net.dinglisch.android.tasker.RELEVANT_VARIABLES-type>[Ljava.lang.String;</net.dinglisch.android.tasker.RELEVANT_VARIABLES-type>
+				</Vals>
+			</Bundle>
+		</Action>
+		<Action sr="act1" ve="7">
+			<code>129</code>
+			<Str sr="arg0" ve="3">var canvas_image = (function(batt, charging, low, r){
+
+var c = document.createElement('canvas');
+c.width = r;
+c.height = r;
+
+var ctx = c.getContext('2d');
+ctx.fillStyle = "white";
+if (charging) {
+    ctx.strokeStyle = "lightgreen";
+} else if (low) {
+    ctx.strokeStyle = "tomato";
+} else {
+    ctx.strokeStyle = "lightsteelblue";
+}
+ctx.lineWidth = r/8;
+ctx.setLineDash([r/16,r/24]);
+ctx.beginPath();
+ctx.arc(r/2, r/2, r/2-ctx.lineWidth/2, -0.5*Math.PI, batt*2*Math.PI/100-0.5*Math.PI);
+ctx.stroke();
+ctx.font = "bold " + r*0.6 + "px monospace";
+var meas = ctx.measureText(batt);
+ctx.fillText(batt &lt; 100 ? batt : "", (r-meas.width)/2, 0.75*r);
+
+return c.toDataURL();
+})(global("BATT"), local("bi_status")==2, global("BATT") &lt;= 15, 128);</Str>
+			<Str sr="arg1" ve="3"/>
+			<Int sr="arg2" val="1"/>
+			<Int sr="arg3" val="45"/>
+		</Action>
+		<Action sr="act2" ve="7">
+			<code>523</code>
+			<Str sr="arg0" ve="3">Battery Level</Str>
+			<Str sr="arg1" ve="3"/>
+			<Str sr="arg10" ve="3"/>
+			<Str sr="arg11" ve="3">SystemUI</Str>
+			<Img sr="arg2" ve="2">
+				<var>%canvas_image</var>
+			</Img>
+			<Int sr="arg3" val="0"/>
+			<Int sr="arg4" val="1"/>
+			<Int sr="arg5" val="1"/>
+			<Int sr="arg6" val="0"/>
+			<Int sr="arg7" val="0"/>
+			<Int sr="arg8" val="0"/>
+			<Str sr="arg9" ve="3"/>
+		</Action>
+	</Task>
+</TaskerData>

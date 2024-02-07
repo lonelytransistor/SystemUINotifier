@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_module_summary">Move selected notifications to the system icon bar part of the status bar. Warning: needs "view notifications" permissions granted.</string>
+    <string name="app_name">SystemUI Notifier</string>
+</resources>

@@ -1,0 +1,38 @@
+{
+    "logs": [
+        {
+            "outputFile": "net.lonelytransistor.notificationinsystem.app-mergeDebugResources-35:/values-v18/values-v18.xml",
+            "map": [
+                {
+                    "source": "/home/kat/.gradle/caches/transforms-3/bacbc1358c5f398a9a90b64dfd18a133/transformed/leanback-1.0.0/res/values-v18/values-v18.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "10",
+                        "endColumns": "12",
+                        "endOffsets": "642"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "104",
+                        "endLines": "11",
+                        "endColumns": "12",
+                        "endOffsets": "691"
+                    }
+                },
+                {
+                    "source": "/home/kat/.gradle/caches/transforms-3/d00f4c3c906d44a66b87021406847fd2/transformed/appcompat-1.6.1/res/values-v18/values-v18.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "48",
+                        "endOffsets": "99"
+                    }
+                }
+            ]
+        }
+    ]
+}
