@@ -21,15 +21,16 @@ public class StatusBarIconControllerImpl {
         self = self_;
         context = (Context) XposedHelpers.getObjectField(self, "mContext");
     }
-
     public static Context getContext() {
         return context;
     }
+    private static int clampSlot(int slot) {
+        slot = Math.max(slot, 0);
+        slot = Math.min(slot, getMaxSlots()-1);
+        return slot;
+    }
 
     public static void refreshIcons(String slotName) {
-        if (self == null)
-            return;
-
         int index = getSlotIndex(slotName);
         refreshIcons(index);
     }
@@ -38,6 +39,46 @@ public class StatusBarIconControllerImpl {
             setIcon(index, holder);
         }
     }
+
+    public static void removeIcon(int index, StatusBarIconHolder holder) {
+        removeIcon(index, holder.tag);
+    }
+    public static void removeAllOwnIcons() {
+        for (int slot : ownIcons.keySet()) {
+            if (!ownIcons.get(slot).isEmpty()) {
+                removeAllOwnIconsInSlot(slot);
+            }
+        }
+    }
+    public static void removeAllOwnIconsInSlot(int index) {
+        if (!ownIcons.containsKey(index))
+            ownIcons.put(index, new HashSet<>());
+        Set<StatusBarIconHolder> icons = new HashSet<>(ownIcons.get(index));
+        for (StatusBarIconHolder holder : icons) {
+            removeIcon(clampSlot(index), holder);
+        }
+    }
+
+    public static int getUid(int index, int tag) {
+        StatusBarIconHolder holder = getHolder(index, -1, tag);
+        return holder == null ? -1 : holder.uid;
+    }
+    public static int getTag(int index, int uid) {
+        StatusBarIconHolder holder = getHolder(index, uid, -1);
+        return holder == null ? -1 : holder.tag;
+    }
+    private static StatusBarIconHolder getHolder(int index, int uid, int tag) {
+        if (!ownIcons.containsKey(index))
+            ownIcons.put(index, new HashSet<>());
+        Set<StatusBarIconHolder> icons = ownIcons.get(index);
+        for (StatusBarIconHolder holder : icons) {
+            if ((uid == holder.uid && uid >= 0) || (tag == holder.tag && tag >= 0)) {
+                return holder;
+            }
+        }
+        return null;
+    }
+
     public static void setIcon(int index, StatusBarIconHolder holder) {
         if (self == null)
             return;
@@ -50,29 +91,6 @@ public class StatusBarIconControllerImpl {
         XposedHelpers.callMethod(self, "setIcon",
                 clampSlot(index), holder.self);
     }
-
-    private static StatusBarIconHolder getHolder(int index, int uid, int tag) {
-        if (!ownIcons.containsKey(index))
-            ownIcons.put(index, new HashSet<>());
-        Set<StatusBarIconHolder> icons = ownIcons.get(index);
-        for (StatusBarIconHolder holder : icons) {
-            if ((uid == holder.uid && uid >= 0) || (tag == holder.tag && tag >= 0)) {
-                return holder;
-            }
-        }
-        return null;
-    }
-    public static int getUid(int index, int tag) {
-        StatusBarIconHolder holder = getHolder(index, -1, tag);
-        return holder == null ? -1 : holder.uid;
-    }
-    public static int getTag(int index, int uid) {
-        StatusBarIconHolder holder = getHolder(index, uid, -1);
-        return holder == null ? -1 : holder.tag;
-    }
-    public static void removeIcon(int index, StatusBarIconHolder holder) {
-        removeIcon(index, holder.tag);
-    }
     public static void removeIcon(int index, int tag) {
         if (self == null)
             return;
@@ -84,29 +102,6 @@ public class StatusBarIconControllerImpl {
 
         XposedHelpers.callMethod(self, "removeIcon",
                 clampSlot(index), holder.tag);
-    }
-    public static void removeAllOwnIcons() {
-        for (int slot : ownIcons.keySet()) {
-            if (!ownIcons.get(slot).isEmpty()) {
-                removeAllOwnIconsInSlot(slot);
-            }
-        }
-    }
-    public static void removeAllOwnIconsInSlot(int index) {
-        if (self == null)
-            return;
-
-        if (!ownIcons.containsKey(index))
-            ownIcons.put(index, new HashSet<>());
-        Set<StatusBarIconHolder> icons = new HashSet<>(ownIcons.get(index));
-        for (StatusBarIconHolder holder : icons) {
-            removeIcon(clampSlot(index), holder);
-        }
-    }
-    private static int clampSlot(int slot) {
-        slot = Math.max(slot, 0);
-        slot = Math.min(slot, getMaxSlots()-1);
-        return slot;
     }
     public static int getMaxSlots() {
         if (self == null)
@@ -127,17 +122,5 @@ public class StatusBarIconControllerImpl {
 
         return (String) XposedHelpers.callMethod(self, "getSlotName",
                 clampSlot(index));
-    }
-    public static void removeAllIconsInSlot(int index) {
-        if (self == null)
-            return;
-
-        if (!ownIcons.containsKey(index))
-            ownIcons.put(index, new HashSet<>());
-        Set<StatusBarIconHolder> icons = ownIcons.get(index);
-        icons.clear();
-
-        XposedHelpers.callMethod(self, "removeAllIconsForSlot",
-                getSlotName(index));
     }
 }

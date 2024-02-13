@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
@@ -27,16 +28,16 @@ public class HookSystemUI {
 
     static void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         InitReflections.init(lpparam);
-        Class<?> klass;
-
-        Class<?> klass0 = XposedHelpers.findClass("com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.classLoader);
-        findAndHookMethod(klass0, new String[] {"isAboveShelf"}, new XC_MethodHook() {
+        Class<?> klass = XposedHelpers.findClass(
+                "com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.classLoader);
+        findAndHookMethod(klass, new String[] {"isAboveShelf"}, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 boolean mustStayOnScreen = (boolean) XposedHelpers.callMethod(
                         param.thisObject, "mustStayOnScreen");
                 if (!mustStayOnScreen) {
-                    Object notificationEntry = XposedHelpers.callMethod(param.thisObject, "getEntry");
+                    View view = (View) param.thisObject;
+                    Object notificationEntry = XposedHelpers.callMethod(view, "getEntry");
                     StatusBarNotification sbn = (StatusBarNotification) XposedHelpers.getObjectField(
                             notificationEntry, "mSbn");
                     String key = sbn.getKey();
@@ -50,11 +51,25 @@ public class HookSystemUI {
                         hide = filter != null;
                     }
                     if (hide) {
-                        if (!mNotificationHiddenViews.containsKey(key)) {
+                        if (!mNotificationHiddenViews.containsKey(key))
                             mNotificationHiddenViews.put(key, new WeakReference<>((View) param.thisObject));
-                        }
-                        ((View) param.thisObject).setVisibility(View.GONE);
+                        view.setVisibility(View.GONE);
                     }
+                }
+            }
+        });
+        findAndHookMethod(klass, Pattern.compile("get.*height", Pattern.CASE_INSENSITIVE), new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                boolean mustStayOnScreen = (boolean) XposedHelpers.callMethod(
+                        param.thisObject, "mustStayOnScreen");
+                if (!mustStayOnScreen) {
+                    Object notificationEntry = XposedHelpers.callMethod(param.thisObject, "getEntry");
+                    StatusBarNotification sbn = (StatusBarNotification) XposedHelpers.getObjectField(
+                            notificationEntry, "mSbn");
+                    String key = sbn.getKey();
+                    if (mNotificationHiddenViews.containsKey(key))
+                        param.setResult(1);
                 }
             }
         });
@@ -109,28 +124,19 @@ public class HookSystemUI {
             }
         });
 
-        Class<?>[] klasses = {
-                XposedHelpers.findClass(
-                        "com.android.systemui.statusbar.phone.StatusBarIconController.IconManager", lpparam.classLoader),
-                XposedHelpers.findClass(
-                        "com.android.systemui.statusbar.phone.StatusBarIconController.TintedIconManager", lpparam.classLoader),
-                XposedHelpers.findClass(
-                        "com.android.systemui.statusbar.phone.StatusBarIconController.DarkIconManager", lpparam.classLoader)
-        };
-        findAndHookMethod(klasses, "onIconAdded", new XC_MethodHook() {
+        klass = XposedHelpers.findClass("com.android.systemui.statusbar.phone.StatusBarIconController", lpparam.classLoader);
+        findAndHookMethod(klass, Pattern.compile("IconManager"), "onIconAdded", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 String slot = (String) param.args[1];
                 Object holder = param.args[3];
                 int tag = (int) XposedHelpers.callMethod(holder, "getTag");
                 if (StatusBarIconControllerImpl.getUid(
-                        StatusBarIconControllerImpl.getSlotIndex(slot),
-                        tag) >= 0
+                        StatusBarIconControllerImpl.getSlotIndex(slot), tag) >= 0
                 ) {
                     param.args[2] = false;
                 }
             }
         });
-
     }
 }

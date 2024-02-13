@@ -1,7 +1,5 @@
 package net.lonelytransistor.notificationinsystem.hooks;
 
-import android.util.Log;
-
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class HookSelf {

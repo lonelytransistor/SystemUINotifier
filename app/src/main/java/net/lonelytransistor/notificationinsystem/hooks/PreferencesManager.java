@@ -11,11 +11,15 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import net.lonelytransistor.commonlib.Preferences;
+import net.lonelytransistor.commonlib.apkselect.Store;
 import net.lonelytransistor.notificationinsystem.Constants;
+import net.lonelytransistor.notificationinsystem.Helpers;
 import net.lonelytransistor.notificationinsystem.hooks.reflected.NotificationIconAreaController;
 import net.lonelytransistor.notificationinsystem.hooks.reflected.StatusBarIconControllerImpl;
 
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
@@ -23,7 +27,7 @@ import java.util.regex.Pattern;
 
 public class PreferencesManager {
     private static final String TAG = "XPosedSystemUIHook";
-    private static Map<String, NotificationFilter> mNotificationFilter = new HashMap<>();
+    private static Map<String, Map<String,NotificationFilter>> mNotificationFilter = new HashMap<>();
     private static final ReentrantLock mutex = new ReentrantLock();
 
     public static class SettingsReceiver extends BroadcastReceiver {
@@ -36,31 +40,38 @@ public class PreferencesManager {
                 Log.e(TAG, "Invalid prefs", e);
                 return;
             }
-            Set<String> pkgs = prefs.getStringSet(Constants.APK_PKGS_SUFFIX);
-            Map<String, NotificationFilter> filter = new HashMap<>();
-            for (String pkg : pkgs) {
-                filter.put(pkg, new NotificationFilter(
-                        prefs.getStringSet(pkg + Constants.APK_CHANNELS_SUFFIX),
-                        prefs.getString(pkg + Constants.APK_REGEX_SUFFIX),
-                        prefs.getInt(pkg + Constants.APK_SLOT_SUFFIX),
-                        prefs.getInt(pkg + Constants.APK_WIDTH_SUFFIX),
-                        prefs.getInt(pkg + Constants.APK_HEIGHT_SUFFIX),
-                        prefs.getBoolean(pkg + Constants.APK_HIDE_PANEL_SUFFIX)
-                ));
+            Map<String, Store.Data> filterData = (Map<String, Store.Data>)
+                    prefs.getMap(Constants.APK_FILTERS_KEY, new HashMap<>());
+            Map<String, Map<String, NotificationFilter>> filter = new HashMap<>();
+            for (String pkg : filterData.keySet()) {
+                Map<String, NotificationFilter> catFilters = new HashMap<>();
+                Store.Data data = filterData.get(pkg);
+                for (String catName : data.categories.keySet()) {
+                    Map<String, Serializable> catData = data.categories.get(catName);
+                    catFilters.put(catName, new NotificationFilter(
+                            catName,
+                            (String) catData.getOrDefault(Constants.APK_REGEX_SUFFIX, ""),
+                            (int) catData.getOrDefault(Constants.APK_SLOT_SUFFIX, 0),
+                            (int) catData.getOrDefault(Constants.APK_WIDTH_SUFFIX, 32),
+                            (int) catData.getOrDefault(Constants.APK_HEIGHT_SUFFIX, 32),
+                            (boolean) catData.getOrDefault(Constants.APK_HIDE_PANEL_SUFFIX, false)
+                    ));
+                }
+                filter.put(pkg, catFilters);
             }
             setNotificationFilters(filter);
         }
     }
 
     public static class NotificationFilter {
-        private final Set<String> channels;
+        private final String channel;
         private final Pattern regex;
         final int width;
         final int height;
         final int slot;
         final boolean hide;
-        NotificationFilter(Set<String> channels, String regex, int slot, int width, int height, boolean hide) {
-            this.channels = channels;
+        NotificationFilter(String channel, String regex, int slot, int width, int height, boolean hide) {
+            this.channel = channel;
             this.regex = Pattern.compile(regex);
             this.slot = slot;
             this.width = width;
@@ -70,7 +81,7 @@ public class PreferencesManager {
         @NonNull @Override
         public String toString() {
             return "NotificationFilter{" +
-                    "channels=" + channels +
+                    "channel=" + channel +
                     ", regex=" + regex +
                     ", width=" + width +
                     ", height=" + height +
@@ -84,13 +95,13 @@ public class PreferencesManager {
         mutex.unlock();
         return ret;
     }
-    static NotificationFilter getNotificationFilter(String pkg) {
+    static NotificationFilter getNotificationFilter(String pkg, String channelId) {
         mutex.lock();
-        NotificationFilter ret = mNotificationFilter.get(pkg);
+        NotificationFilter ret = mNotificationFilter.get(pkg).get(channelId);
         mutex.unlock();
         return ret;
     }
-    static void setNotificationFilters(Map<String, NotificationFilter> filters) {
+    static void setNotificationFilters(Map<String, Map<String, NotificationFilter>> filters) {
         mutex.lock();
         mNotificationFilter = filters;
         Log.i(TAG, "Set filters: " + filters);
@@ -114,7 +125,7 @@ public class PreferencesManager {
     static NotificationFilter getFilter(String pkg, String title, String desc, String channelId) {
         if (!hasNotificationFilter(pkg))
             return null;
-        NotificationFilter filter = getNotificationFilter(pkg);
+        NotificationFilter filter = getNotificationFilter(pkg, channelId);
         if (filter == null)
             return null;
 
@@ -122,15 +133,12 @@ public class PreferencesManager {
                 !filter.regex.matcher(desc).find()) {
             return null;
         }
-        if (filter.channels.contains(channelId))
-            return filter;
-
-        return null;
+        return filter;
     }
     static NotificationFilter getFilter(StatusBarNotification sbn) {
         Notification notif = sbn.getNotification();
-        String title = Constants.getExtraString(notif.extras, Notification.EXTRA_TITLE);
-        String desc = Constants.getExtraString(notif.extras, Notification.EXTRA_TEXT);
+        String title = Helpers.getExtraString(notif.extras, Notification.EXTRA_TITLE);
+        String desc = Helpers.getExtraString(notif.extras, Notification.EXTRA_TEXT);
 
         return getFilter(sbn.getPackageName(),
                 title, desc, notif.getChannelId());

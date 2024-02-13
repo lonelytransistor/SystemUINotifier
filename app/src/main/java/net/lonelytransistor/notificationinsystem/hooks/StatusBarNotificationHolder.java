@@ -3,20 +3,14 @@ package net.lonelytransistor.notificationinsystem.hooks;
 
 import android.app.Notification;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.service.notification.StatusBarNotification;
-import android.view.View;
 
-import net.lonelytransistor.notificationinsystem.Constants;
+import net.lonelytransistor.notificationinsystem.Helpers;
 import net.lonelytransistor.notificationinsystem.hooks.reflected.StatusBarIcon;
-import net.lonelytransistor.notificationinsystem.hooks.reflected.StatusBarIconControllerImpl;
 import net.lonelytransistor.notificationinsystem.hooks.reflected.StatusBarIconHolder;
 
 import java.io.InvalidObjectException;
-import java.lang.ref.WeakReference;
 import java.util.Objects;
 
 public class StatusBarNotificationHolder {
@@ -39,7 +33,7 @@ public class StatusBarNotificationHolder {
             smallIcon = notif.getLargeIcon();
         if (smallIcon == null)
             throw new Resources.NotFoundException("Icon not found!");
-        if (icon != null && icon.equals(smallIcon))
+        if (icon != null && icon.sameAs(smallIcon))
             return false;
         icon = new StatusBarIcon(pkgName, smallIcon, width, height);
         iconHolder = new StatusBarIconHolder(icon, uid);
@@ -56,8 +50,8 @@ public class StatusBarNotificationHolder {
         key = sbn.getKey();
         pkgName = sbn.getPackageName();
         category = notif.category;
-        title = Constants.getExtraString(notif.extras, Notification.EXTRA_TITLE);
-        desc = Constants.getExtraString(notif.extras, Notification.EXTRA_TEXT);
+        title = Helpers.getExtraString(notif.extras, Notification.EXTRA_TITLE);
+        desc = Helpers.getExtraString(notif.extras, Notification.EXTRA_TEXT);
         setIcon(notif);
     }
     Boolean update(StatusBarNotification sbn) throws InvalidObjectException {

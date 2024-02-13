@@ -7,6 +7,7 @@ import android.os.UserHandle;
 
 import net.lonelytransistor.notificationinsystem.BuildConfig;
 import net.lonelytransistor.notificationinsystem.Constants;
+import net.lonelytransistor.notificationinsystem.Helpers;
 import net.lonelytransistor.notificationinsystem.hooks.PreferencesManager;
 
 import java.lang.reflect.Method;
@@ -34,12 +35,6 @@ public class InitReflections {
             StatusBarIcon.StatusBarIcon_class_constructor_OSOIIS = XposedHelpers.findConstructorBestMatch(
                     StatusBarIcon.StatusBarIcon_class,
                     UserHandle.class, String.class, Icon.class, Integer.class, Integer.class, CharSequence.class);
-            StatusBarIcon.StatusBarIcon_icon =
-                    StatusBarIcon.StatusBarIcon_class.getDeclaredField("icon");
-            StatusBarIcon.StatusBarIcon_icon.setAccessible(true);
-            StatusBarIcon.StatusBarIcon_pkg =
-                    StatusBarIcon.StatusBarIcon_class.getDeclaredField("pkg");
-            StatusBarIcon.StatusBarIcon_pkg.setAccessible(true);
 
             Class<?> klass = XposedHelpers.findClass(
                     "com.android.systemui.statusbar.phone.NotificationIconAreaController", lpparam.classLoader);
@@ -57,7 +52,7 @@ public class InitReflections {
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         StatusBarIconControllerImpl.init(param.thisObject);
 
-                        Constants.registerReceiver(
+                        Helpers.registerReceiver(
                                 StatusBarIconControllerImpl.getContext(),
                                 Constants.BROADCAST_SETTINGS_CHANGED,
                                 new PreferencesManager.SettingsReceiver());

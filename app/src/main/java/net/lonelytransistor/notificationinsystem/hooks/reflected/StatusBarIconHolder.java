@@ -17,14 +17,11 @@ public class StatusBarIconHolder {
         try {
             uid = tag_;
             tag = tag_ + Constants.TAG_PREFIX;
-            self = XposedHelpers.callStaticMethod(StatusBarIconHolder_class, "fromIcon",
-                    icon.self);
+            self = XposedHelpers.callStaticMethod(StatusBarIconHolder_class,
+                    "fromIcon", icon.self);
             StatusBarIconHolder_field_tag.set(self, tag);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-    }
-    StatusBarIcon getIcon() {
-        return new StatusBarIcon(XposedHelpers.callMethod(self, "getIcon"));
     }
 }

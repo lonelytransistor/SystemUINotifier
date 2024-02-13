@@ -1,11 +1,10 @@
 package net.lonelytransistor.notificationinsystem;
 
-import static net.lonelytransistor.notificationinsystem.Constants.sendConfig;
+import static net.lonelytransistor.notificationinsystem.Helpers.sendConfig;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import net.lonelytransistor.notificationinsystem.ui.SettingsBroadcastReceiver;
 
