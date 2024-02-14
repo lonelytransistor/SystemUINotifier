@@ -33,7 +33,7 @@ public class StatusBarNotificationHolder {
             smallIcon = notif.getLargeIcon();
         if (smallIcon == null)
             throw new Resources.NotFoundException("Icon not found!");
-        if (icon != null && icon.sameAs(smallIcon))
+        if (icon != null && icon.sameAs(smallIcon) && false)
             return false;
         icon = new StatusBarIcon(pkgName, smallIcon, width, height);
         iconHolder = new StatusBarIconHolder(icon, uid);

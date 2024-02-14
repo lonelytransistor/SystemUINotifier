@@ -30,7 +30,7 @@ public class HookSystemUI {
         InitReflections.init(lpparam);
         Class<?> klass = XposedHelpers.findClass(
                 "com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.classLoader);
-        findAndHookMethod(klass, new String[] {"isAboveShelf"}, new XC_MethodHook() {
+        findAndHookMethod(klass, "isAboveShelf", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 boolean mustStayOnScreen = (boolean) XposedHelpers.callMethod(
@@ -69,7 +69,7 @@ public class HookSystemUI {
                             notificationEntry, "mSbn");
                     String key = sbn.getKey();
                     if (mNotificationHiddenViews.containsKey(key))
-                        param.setResult(1);
+                        param.setResult(0);
                 }
             }
         });
