@@ -20,11 +20,21 @@ The application was tested only on Android 11 AOSP, Android 11, 12 OneUI.
 
 This module is provided as is without any promise of support. But I do welcome pull requests.
 
-The tasker profile accomplishing the battery circle is within the repo: [TaskerProfile.prj.xml](/TaskerProfile.prj.xml)
+**My config**
+
+The tasker profile accomplishing the battery circle and more is within the repo: [TaskerProfile.prj.xml](/TaskerProfile.prj.xml)
+The settings of this module for the config is:
+
+- SystemUI small : Slot: 48, Size: 36x36
+- SystemUI tiny : Slot: 48, Size: 16x32
+- SystemUI wide : Slot: 53, Size: 92x47
+- SystemUI: Slot: 52, Size: 47x47
 
 **Screenshots:**
 
-<img src="/screenshots/settings.jpg" style="height:40vh;"/><img src="/screenshots/hidden_notification.jpg" style="height:40vh;"/><img src="/screenshots/shown_notification.jpg" style="height:40vh;"/>
+<img src="screenshots/settings.jpg" style="height:40vh;"/><img src="screenshots/hidden_notification.jpg" style="height:40vh;"/><img src="screenshots/shown_notification.jpg" style="height:40vh;"/>
+
+<img src="screenshots/example_usage.png" style="width:100%;"/>
 
 License
 -------

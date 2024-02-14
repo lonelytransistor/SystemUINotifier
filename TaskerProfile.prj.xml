@@ -1,10 +1,30 @@
 <TaskerData sr="" dvi="1" tv="6.3.1-beta">
-	<Profile sr="prof31" ve="2">
-		<cdate>1707073315485</cdate>
+	<Profile sr="prof15" ve="2">
+		<cdate>1707912926291</cdate>
 		<clp>true</clp>
-		<edate>1707073364222</edate>
+		<edate>1707912979411</edate>
 		<flags>8</flags>
-		<id>31</id>
+		<id>15</id>
+		<mid0>11</mid0>
+		<nme>Clock</nme>
+		<Event sr="con0" ve="2">
+			<code>2095</code>
+			<pri>0</pri>
+			<Bundle sr="arg0">
+				<Vals sr="val">
+					<net.dinglisch.android.tasker.RELEVANT_VARIABLES>&lt;StringArray sr=""/&gt;</net.dinglisch.android.tasker.RELEVANT_VARIABLES>
+					<net.dinglisch.android.tasker.RELEVANT_VARIABLES-type>[Ljava.lang.String;</net.dinglisch.android.tasker.RELEVANT_VARIABLES-type>
+				</Vals>
+			</Bundle>
+			<Str sr="arg1" ve="3">20000</Str>
+		</Event>
+	</Profile>
+	<Profile sr="prof22" ve="2">
+		<cdate>1707386129905</cdate>
+		<clp>true</clp>
+		<edate>1707386152702</edate>
+		<flags>8</flags>
+		<id>22</id>
 		<mid0>41</mid0>
 		<nme>Battery Charging</nme>
 		<State sr="con0" ve="2">
@@ -12,12 +32,12 @@
 			<Int sr="arg0" val="0"/>
 		</State>
 	</Profile>
-	<Profile sr="prof32" ve="2">
-		<cdate>1707073322234</cdate>
+	<Profile sr="prof24" ve="2">
+		<cdate>1707386157665</cdate>
 		<clp>true</clp>
-		<edate>1707073371889</edate>
+		<edate>1707863956112</edate>
 		<flags>8</flags>
-		<id>32</id>
+		<id>24</id>
 		<mid0>41</mid0>
 		<nme>Battery Discharging</nme>
 		<State sr="con0" ve="2">
@@ -26,10 +46,30 @@
 			<Int sr="arg0" val="0"/>
 		</State>
 	</Profile>
+	<Profile sr="prof27" ve="2">
+		<cdate>1707389508703</cdate>
+		<clp>true</clp>
+		<edate>1707865911421</edate>
+		<flags>8</flags>
+		<id>27</id>
+		<mid0>25</mid0>
+		<nme>RAM info</nme>
+		<Event sr="con0" ve="2">
+			<code>2095</code>
+			<pri>0</pri>
+			<Bundle sr="arg0">
+				<Vals sr="val">
+					<net.dinglisch.android.tasker.RELEVANT_VARIABLES>&lt;StringArray sr=""/&gt;</net.dinglisch.android.tasker.RELEVANT_VARIABLES>
+					<net.dinglisch.android.tasker.RELEVANT_VARIABLES-type>[Ljava.lang.String;</net.dinglisch.android.tasker.RELEVANT_VARIABLES-type>
+				</Vals>
+			</Bundle>
+			<Str sr="arg1" ve="3">30000</Str>
+		</Event>
+	</Profile>
 	<Profile sr="prof36" ve="2">
 		<cdate>1707073594603</cdate>
 		<clp>true</clp>
-		<edate>1707073683819</edate>
+		<edate>1707863988664</edate>
 		<flags>8</flags>
 		<id>36</id>
 		<mid0>34</mid0>
@@ -42,7 +82,7 @@
 	<Profile sr="prof37" ve="2">
 		<cdate>1707073602421</cdate>
 		<clp>true</clp>
-		<edate>1707073691759</edate>
+		<edate>1707863997516</edate>
 		<flags>8</flags>
 		<id>37</id>
 		<mid0>35</mid0>
@@ -55,7 +95,7 @@
 	<Profile sr="prof40" ve="2">
 		<cdate>1707073664697</cdate>
 		<clp>true</clp>
-		<edate>1707073675881</edate>
+		<edate>1707864005571</edate>
 		<flags>8</flags>
 		<id>40</id>
 		<mid0>39</mid0>
@@ -69,7 +109,7 @@
 	<Profile sr="prof42" ve="2">
 		<cdate>1707073778135</cdate>
 		<clp>true</clp>
-		<edate>1707073915424</edate>
+		<edate>1707452020620</edate>
 		<flags>8</flags>
 		<id>42</id>
 		<mid0>41</mid0>
@@ -81,24 +121,352 @@
 	<Project sr="proj0" ve="2">
 		<cdate>1707073194944</cdate>
 		<name>SystemUI Icons</name>
-		<pids>42,32,31,40,37,36</pids>
-		<tids>39,41,10,35,34</tids>
+		<pids>22,37,27,42,15,36,24,40</pids>
+		<tids>39,35,34,11,25,28,41,10,29</tids>
 	</Project>
 	<Task sr="task10">
 		<cdate>1707183315548</cdate>
-		<edate>1707236293642</edate>
+		<edate>1707864160217</edate>
 		<id>10</id>
 		<nme>Battery Circle Dismiss</nme>
 		<pri>100</pri>
 		<Action sr="act0" ve="7">
 			<code>779</code>
-			<Str sr="arg0" ve="3">Battery Level</Str>
+			<Str sr="arg0" ve="3">RAM</Str>
+			<Int sr="arg1" val="0"/>
+		</Action>
+		<Action sr="act1" ve="7">
+			<code>779</code>
+			<Str sr="arg0" ve="3">Battery Level0</Str>
+			<Int sr="arg1" val="0"/>
+		</Action>
+		<Action sr="act2" ve="7">
+			<code>779</code>
+			<Str sr="arg0" ve="3">Battery Level+RAM</Str>
+			<Int sr="arg1" val="0"/>
+		</Action>
+	</Task>
+	<Task sr="task11">
+		<cdate>1707910836787</cdate>
+		<edate>1707913452066</edate>
+		<id>11</id>
+		<nme>Clock</nme>
+		<pri>100</pri>
+		<Action sr="act0" ve="7">
+			<code>129</code>
+			<Str sr="arg0" ve="3">var canvas_image=(function(h,p,t,d,dd){
+  const enc=[0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x6F];
+  function drawSegment(c,x,y,w,h,d,hz) {
+    if (hz) {
+      x+=d;
+      w-=d*2;
+      c.moveTo(x,y-h/2);
+      c.lineTo(x+h/2,y-h);
+      c.lineTo(x+w-h/2,y-h);
+      c.lineTo(x+w,y-h/2);
+      c.lineTo(x+w-h/2,y);
+      c.lineTo(x+h/2,y);
+    } else {
+      y+=d;
+      h-=d*2;
+      c.moveTo(x+w/2,y);
+      c.lineTo(x+w,y+w/2);
+      c.lineTo(x+w,y+h-w/2);
+      c.lineTo(x+w/2,y+h);
+      c.lineTo(x,y+h-w/2);
+      c.lineTo(x,y+w/2);
+    }
+    c.fill();
+  }
+  function drawSegments(c,x,y,w,h,t,d,n) {
+    if (n&amp;0b1000000) drawSegment(c,x+t/2,y+h/2+t/2,w-t,t,d,1);
+    if (n&amp;0b0000010) drawSegment(c,x+w-t,y+t/2,t,h/2-t/2,d);
+    if (n&amp;0b0000100) drawSegment(c,x+w-t,y+h/2,t,h/2-t/2,d);
+    if (n&amp;0b0001000) drawSegment(c,x+t/2,y+h,w-t,t,1,d);
+    if (n&amp;0b0100000) drawSegment(c,x,y+t/2,t,h/2-t/2,d);
+    if (n&amp;0b0010000) drawSegment(c,x,y+h/2,t,h/2-t/2,d);
+    if (n&amp;0b0000001) drawSegment(c,x+t/2,y+t,w-t,t,1,d);
+  }
+  function drawTime(c,x,y,h,t,d,dd,p) {
+    var tm=new Date().toLocaleTimeString('en-US', {hour12: false, hour: "numeric", minute: "numeric"});
+    var x=0; var w=h/2;
+    drawSegments(c,0,0,w,h,t,d,enc[tm[0]*1]); x+=w+dd;
+    drawSegments(c,x,0,w,h,t,d,enc[tm[1]*1]); x+=w+dd*2;
+    w=h/2-h*(p-0.5); h-=h*(p-0.5)*2;
+    drawSegments(c,x,0,w,h,t,d,enc[tm[3]*1]); x+=w+dd;
+    drawSegments(c,x,0,w,h,t,d,enc[tm[4]*1]); x+=w+dd;
+    return x;
+  }
+  var cv=document.createElement("canvas");
+  cv.width=h*(3+4*dd-2*p);
+  cv.height=h;
+  var c=cv.getContext("2d");
+  c.fillStyle="#000";
+  drawTime(c,0,0,h,h*t,h*d,h*dd,p);
+  return cv.toDataURL();
+})(47*2,0.65,0.09,0.03,0.06);</Str>
+			<Str sr="arg1" ve="3"/>
+			<Int sr="arg2" val="1"/>
+			<Int sr="arg3" val="45"/>
+		</Action>
+		<Action sr="act1" ve="7">
+			<code>523</code>
+			<Str sr="arg0" ve="3">Clock</Str>
+			<Str sr="arg1" ve="3"/>
+			<Str sr="arg10" ve="3"/>
+			<Str sr="arg11" ve="3">SystemUI wide</Str>
+			<Img sr="arg2" ve="2">
+				<var>%canvas_image</var>
+			</Img>
+			<Int sr="arg3" val="0"/>
+			<Int sr="arg4" val="1"/>
+			<Int sr="arg5" val="1"/>
+			<Int sr="arg6" val="0"/>
+			<Int sr="arg7" val="0"/>
+			<Int sr="arg8" val="0"/>
+			<Str sr="arg9" ve="3"/>
+		</Action>
+	</Task>
+	<Task sr="task25">
+		<cdate>1707388501859</cdate>
+		<edate>1707910857176</edate>
+		<id>25</id>
+		<nme>RAM Info</nme>
+		<pri>6</pri>
+		<Action sr="act0" ve="7">
+			<code>123</code>
+			<Str sr="arg0" ve="3">free | tail -n1 | awk '{printf "%.0f", ($3*100/$2)}'</Str>
+			<Int sr="arg1" val="40"/>
+			<Int sr="arg2" val="0"/>
+			<Str sr="arg3" ve="3">%ram</Str>
+			<Str sr="arg4" ve="3"/>
+			<Str sr="arg5" ve="3"/>
+			<Int sr="arg6" val="1"/>
+			<Int sr="arg7" val="0"/>
+		</Action>
+		<Action sr="act1" ve="7">
+			<code>129</code>
+			<Str sr="arg0" ve="3">var canvas_image = (function(ram, w, h){
+var c = document.createElement('canvas');
+c.width = w;
+c.height = h;
+
+var ctx = c.getContext('2d');
+ctx.fillStyle = "grey";
+ctx.fillRect(0,0,w,h);
+ctx.fillStyle = "white";
+ctx.fillRect(0,100-h*ram/100,w,100);
+
+return c.toDataURL();
+})(local("ram"), 10, 100);</Str>
+			<Str sr="arg1" ve="3"/>
+			<Int sr="arg2" val="1"/>
+			<Int sr="arg3" val="45"/>
+		</Action>
+		<Action sr="act2" ve="7">
+			<code>523</code>
+			<Str sr="arg0" ve="3">RAM</Str>
+			<Str sr="arg1" ve="3"/>
+			<Str sr="arg10" ve="3"/>
+			<Str sr="arg11" ve="3">SystemUI tiny</Str>
+			<Img sr="arg2" ve="2">
+				<var>%canvas_image</var>
+			</Img>
+			<Int sr="arg3" val="0"/>
+			<Int sr="arg4" val="1"/>
+			<Int sr="arg5" val="1"/>
+			<Int sr="arg6" val="0"/>
+			<Int sr="arg7" val="0"/>
+			<Int sr="arg8" val="0"/>
+			<Str sr="arg9" ve="3"/>
+		</Action>
+	</Task>
+	<Task sr="task28">
+		<cdate>1707073721685</cdate>
+		<edate>1707865911421</edate>
+		<id>28</id>
+		<nme>Battery Circle + RAM</nme>
+		<pri>100</pri>
+		<Action sr="act0" ve="7">
+			<code>129</code>
+			<Str sr="arg0" ve="3">var w_delim = 5;
+var w_ram = 20;
+var h_ram = 98;
+var h_total = 128;
+
+var w_total = w_ram + w_delim + h_total;</Str>
+			<Str sr="arg1" ve="3"/>
+			<Int sr="arg2" val="1"/>
+			<Int sr="arg3" val="45"/>
+		</Action>
+		<Action sr="act1" ve="7">
+			<code>123</code>
+			<Str sr="arg0" ve="3">free | head -n2 | tail -n1 | awk '{printf "%.0f", ($3*100/$2)}'</Str>
+			<Int sr="arg1" val="40"/>
+			<Int sr="arg2" val="0"/>
+			<Str sr="arg3" ve="3">%ram</Str>
+			<Str sr="arg4" ve="3"/>
+			<Str sr="arg5" ve="3"/>
+			<Int sr="arg6" val="1"/>
+			<Int sr="arg7" val="0"/>
+		</Action>
+		<Action sr="act2" ve="7">
+			<code>424</code>
+			<Bundle sr="arg0">
+				<Vals sr="val">
+					<net.dinglisch.android.tasker.RELEVANT_VARIABLES>&lt;StringArray sr=""&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES0&gt;%bi_level
+01. Level
+The current battery level, from 0 to scale&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES0&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES1&gt;%bi_scale
+02. Scale
+The maximum battery level&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES1&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES2&gt;%bi_status
+03. Status
+1=Unknown; 2=Charging; 3=Discharging; 4=Not Charging; 5=Full;&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES2&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES3&gt;%bi_status_string
+04. Status Description
+&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES3&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES4&gt;%bi_temperature
+05. Temperature
+Current battery temperature in degree Celsius. May always show as 0 on some devices.&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES4&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES5&gt;%bi_power_source
+06. Power Source
+1=AC; 2=USB; 4=Wireless; 8=Dock;&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES5&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES6&gt;%bi_power_source_string
+07. Power Source Description
+&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES6&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES7&gt;%bi_health
+08. Battery Health
+1=Unknown; 2=Good; 3=Overheat; 4=Dead; 5=Over Voltage; 6=Failure;&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES7&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES8&gt;%bi_time_until_charged
+08. Time Until Charged
+Approximate time (MS) remaining until the battery is fully charged or -1 if not possible to get&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES8&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES9&gt;%bi_health_string
+09. Battery Health Description
+&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES9&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES10&gt;%bi_battery_low
+10. Battery Low
+true if device battery level is low (corresponds to the Low battery warning system dialog), false otherwise&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES10&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES11&gt;%bi_voltage
+11. Voltage
+Current battery voltage in millivolts&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES11&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES12&gt;%bi_present
+12. Present
+true if device has a battery, false otherwise&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES12&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES13&gt;%bi_technology
+13. Technology
+Description of the technology of the current battery&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES13&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES14&gt;%bi_capacity_percentage
+14. Capacity Percentage
+Remaining battery capacity percentage&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES14&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES15&gt;%bi_capacity
+15. Capacity
+Battery capacity in microampere-hours&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES15&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES16&gt;%bi_current_average
+16. Average Current
+Average battery current in microamperes. Can be positive (charging) or negative (discharging)&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES16&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES17&gt;%bi_current_now
+17. Instantaneous Current
+Instantaneous battery current in microamperes. Can be positive (charging) or negative (discharging)&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES17&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES18&gt;%bi_energy_counter
+18. Energy Counter
+Battery remaining energy in nanowatt-hours&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES18&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES19&gt;%bi_adaptive_charging_enabled
+19. Adaptive Charging Enabled
+true if adaptive charging is enabled on your device, false if not. May not be correct on all devices.&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES19&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES20&gt;%bi_manufacturing_date
+19. Battery Manufacturing Date
+Seconds Since Epoch&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES20&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES21&gt;%bi_adaptive_battery_management_enabled
+20. Adaptive Battery Enabled
+true if the "Adaptive Battery" setting is enabled on your phone, false if not. May not be correct on all devices.&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES21&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES22&gt;%bi_first_usage_date
+20. Battery First Usage Date
+Seconds Since Epoch&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES22&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES23&gt;%bi_charging_policy
+21. Battery Charging Policy
+1=Default; 2=Adaptive Static; 3=Adaptive Dynamic; 4=Adaptive Long Life;&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES23&gt;&lt;_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES24&gt;%bi_state_of_health
+22. Battery State of Health
+Percentage representing the measured battery state of health (remaining estimated full charge capacity relative to the rated capacity in %)&lt;/_array_net.dinglisch.android.tasker.RELEVANT_VARIABLES24&gt;&lt;/StringArray&gt;</net.dinglisch.android.tasker.RELEVANT_VARIABLES>
+					<net.dinglisch.android.tasker.RELEVANT_VARIABLES-type>[Ljava.lang.String;</net.dinglisch.android.tasker.RELEVANT_VARIABLES-type>
+				</Vals>
+			</Bundle>
+		</Action>
+		<Action sr="act3" ve="7">
+			<code>129</code>
+			<Str sr="arg0" ve="3">var canvas_data=(function(){
+
+var c = document.createElement('canvas');
+c.width = local("w_total")*1;
+c.height = local("h_total")*1;
+cv0 = c.getContext('2d');
+
+
+cv0 = (function(ctx, x, y, w, r, batt, charging, low){
+ctx.beginPath();
+ctx.setLineDash([r/16,r/24]);
+if (charging) {
+    ctx.strokeStyle = "lightgreen";
+    ctx.setLineDash([]);
+} else if (low) {
+    ctx.strokeStyle = "tomato";
+} else {
+    ctx.strokeStyle = "lightsteelblue";
+}
+ctx.lineWidth = r/8;
+ctx.arc(x+r/2, y+r/2, r/2-ctx.lineWidth/2, -0.5*Math.PI, batt*2*Math.PI/100-0.5*Math.PI);
+ctx.stroke();
+ctx.closePath();
+
+ctx.beginPath();
+ctx.globalAlpha = 0.15;
+ctx.arc(x+r/2, y+r/2, r/2-ctx.lineWidth/2, 0, 2*Math.PI);
+ctx.stroke();
+if (low &amp;&amp; !charging) {
+    ctx.globalAlpha = 0.1;
+    ctx.fillStyle = "white";
+    ctx.fill();
+}
+ctx.closePath();
+
+ctx.globalAlpha = 1.0;
+ctx.fillStyle = "white";
+ctx.font = "bold " + r*0.6 + "px monospace";
+var meas = ctx.measureText(batt);
+ctx.fillText(batt &lt; 100 ? batt : "", x+(r-meas.width)/2, y+0.725*r);
+
+return ctx;
+})(cv0, local("w_ram")*1 + local("w_delim")*1, 0, local("h_total")*1, local("h_total")*1, global("BATT")*1, local("bi_status")==2, global("BATT")*1 &lt;= 15);
+
+
+cv0 = (function(ctx, x, y, w, h, ram)
+{
+ctx.fillStyle = "white";
+ctx.globalAlpha = 0.5;
+ctx.fillRect(x,y,w,h);
+ctx.globalAlpha = 1;
+ctx.fillRect(x,y+h*(1-ram/100),w,h*ram/100);
+
+return ctx;
+})(cv0, 0, local("h_total")*1/2-local("h_ram")*1/2-2, local("w_ram")*1, local("h_ram")*1, local("ram")*1);
+
+
+return c.toDataURL();
+})();</Str>
+			<Str sr="arg1" ve="3"/>
+			<Int sr="arg2" val="1"/>
+			<Int sr="arg3" val="45"/>
+		</Action>
+		<Action sr="act4" ve="7">
+			<code>523</code>
+			<Str sr="arg0" ve="3">Battery Level+RAM</Str>
+			<Str sr="arg1" ve="3"/>
+			<Str sr="arg10" ve="3"/>
+			<Str sr="arg11" ve="3">SystemUI</Str>
+			<Img sr="arg2" ve="2">
+				<var>%canvas_data</var>
+			</Img>
+			<Int sr="arg3" val="0"/>
+			<Int sr="arg4" val="1"/>
+			<Int sr="arg5" val="1"/>
+			<Int sr="arg6" val="0"/>
+			<Int sr="arg7" val="0"/>
+			<Int sr="arg8" val="0"/>
+			<Str sr="arg9" ve="3"/>
+		</Action>
+	</Task>
+	<Task sr="task29">
+		<cdate>1707473641068</cdate>
+		<edate>1707864149598</edate>
+		<id>29</id>
+		<nme>RAM Info Dismiss</nme>
+		<pri>100</pri>
+		<Action sr="act0" ve="7">
+			<code>779</code>
+			<Str sr="arg0" ve="3">RAM</Str>
 			<Int sr="arg1" val="0"/>
 		</Action>
 	</Task>
 	<Task sr="task34">
 		<cdate>1707073488361</cdate>
-		<edate>1707256464517</edate>
+		<edate>1707865413323</edate>
 		<id>34</id>
 		<nme>Headset Mic On</nme>
 		<pri>100</pri>
@@ -107,7 +475,7 @@
 			<Str sr="arg0" ve="3">Headset</Str>
 			<Str sr="arg1" ve="3"/>
 			<Str sr="arg10" ve="3"/>
-			<Str sr="arg11" ve="3">SystemUI</Str>
+			<Str sr="arg11" ve="3">SystemUI small</Str>
 			<Img sr="arg2" ve="2">
 				<nme>mw_hardware_headset_m</nme>
 			</Img>
@@ -122,7 +490,7 @@
 	</Task>
 	<Task sr="task35">
 		<cdate>1707073529570</cdate>
-		<edate>1707073555095</edate>
+		<edate>1707863997516</edate>
 		<id>35</id>
 		<nme>Headset NoMic On</nme>
 		<Action sr="act0" ve="7">
@@ -130,7 +498,7 @@
 			<Str sr="arg0" ve="3">Headset</Str>
 			<Str sr="arg1" ve="3"/>
 			<Str sr="arg10" ve="3"/>
-			<Str sr="arg11" ve="3">SystemUI</Str>
+			<Str sr="arg11" ve="3">SystemUI small</Str>
 			<Img sr="arg2" ve="2">
 				<nme>mw_hardware_headset</nme>
 			</Img>
@@ -145,7 +513,7 @@
 	</Task>
 	<Task sr="task39">
 		<cdate>1707073636342</cdate>
-		<edate>1707256452905</edate>
+		<edate>1707865614813</edate>
 		<id>39</id>
 		<nme>Headset Off</nme>
 		<pri>100</pri>
@@ -157,10 +525,10 @@
 	</Task>
 	<Task sr="task41">
 		<cdate>1707073721685</cdate>
-		<edate>1707312899756</edate>
+		<edate>1707910860781</edate>
 		<id>41</id>
 		<nme>Battery Circle</nme>
-		<pri>100</pri>
+		<pri>6</pri>
 		<Action sr="act0" ve="7">
 			<code>424</code>
 			<Bundle sr="arg0">
@@ -230,31 +598,46 @@ c.height = r;
 
 var ctx = c.getContext('2d');
 ctx.fillStyle = "white";
+ctx.setLineDash([r/16,r/24]);
 if (charging) {
     ctx.strokeStyle = "lightgreen";
+    ctx.setLineDash([]);
 } else if (low) {
     ctx.strokeStyle = "tomato";
 } else {
     ctx.strokeStyle = "lightsteelblue";
 }
 ctx.lineWidth = r/8;
-ctx.setLineDash([r/16,r/24]);
 ctx.beginPath();
 ctx.arc(r/2, r/2, r/2-ctx.lineWidth/2, -0.5*Math.PI, batt*2*Math.PI/100-0.5*Math.PI);
 ctx.stroke();
+ctx.closePath();
+
+ctx.globalAlpha = 0.15;
+ctx.beginPath();
+ctx.arc(r/2, r/2, r/2-ctx.lineWidth/2, 0, 2*Math.PI);
+ctx.stroke();
+if (low &amp;&amp; !charging) {
+    ctx.globalAlpha = 0.1;
+    ctx.fill();
+}
+ctx.closePath();
+ctx.globalAlpha = 1.0;
+
+ctx.fillStyle = "white";
 ctx.font = "bold " + r*0.6 + "px monospace";
 var meas = ctx.measureText(batt);
-ctx.fillText(batt &lt; 100 ? batt : "", (r-meas.width)/2, 0.75*r);
+ctx.fillText(batt &lt; 100 ? batt : "", (r-meas.width)/2, 0.725*r);
 
 return c.toDataURL();
-})(global("BATT"), local("bi_status")==2, global("BATT") &lt;= 15, 128);</Str>
+})(global("BATT"), local("bi_status")==2, global("BATT") &lt;= 15, 47*2);</Str>
 			<Str sr="arg1" ve="3"/>
 			<Int sr="arg2" val="1"/>
 			<Int sr="arg3" val="45"/>
 		</Action>
 		<Action sr="act2" ve="7">
 			<code>523</code>
-			<Str sr="arg0" ve="3">Battery Level</Str>
+			<Str sr="arg0" ve="3">Battery Level0</Str>
 			<Str sr="arg1" ve="3"/>
 			<Str sr="arg10" ve="3"/>
 			<Str sr="arg11" ve="3">SystemUI</Str>
