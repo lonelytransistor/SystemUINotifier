@@ -9,6 +9,7 @@ import net.lonelytransistor.notificationinsystem.BuildConfig;
 import net.lonelytransistor.notificationinsystem.Constants;
 import net.lonelytransistor.notificationinsystem.Helpers;
 import net.lonelytransistor.notificationinsystem.hooks.PreferencesManager;
+import net.lonelytransistor.notificationinsystem.ui.SettingsBroadcastReceiver;
 
 import java.lang.reflect.Method;
 
@@ -26,17 +27,14 @@ public class InitReflections {
 
             StatusBarIconHolder.StatusBarIconHolder_class = XposedHelpers.findClass(
                     "com.android.systemui.statusbar.phone.StatusBarIconHolder", lpparam.classLoader);
-            StatusBarIconHolder.StatusBarIconHolder_field_tag =
-                    StatusBarIconHolder.StatusBarIconHolder_class.getDeclaredField("mTag");
-            StatusBarIconHolder.StatusBarIconHolder_field_tag.setAccessible(true);
-
-            StatusBarIcon.StatusBarIcon_class = XposedHelpers.findClass(
-                    "com.android.internal.statusbar.StatusBarIcon", lpparam.classLoader);
-            StatusBarIcon.StatusBarIcon_class_constructor_OSOIIS = XposedHelpers.findConstructorBestMatch(
-                    StatusBarIcon.StatusBarIcon_class,
-                    UserHandle.class, String.class, Icon.class, Integer.class, Integer.class, CharSequence.class);
 
             Class<?> klass = XposedHelpers.findClass(
+                    "com.android.internal.statusbar.StatusBarIcon", lpparam.classLoader);
+            StatusBarIcon.StatusBarIcon_class_constructor_OSOIIS = XposedHelpers.findConstructorBestMatch(
+                    klass,
+                    UserHandle.class, String.class, Icon.class, Integer.class, Integer.class, CharSequence.class);
+
+            klass = XposedHelpers.findClass(
                     "com.android.systemui.statusbar.phone.NotificationIconAreaController", lpparam.classLoader);
             XposedBridge.hookAllConstructors(klass, new XC_MethodHook() {
                 @Override
@@ -52,6 +50,10 @@ public class InitReflections {
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         StatusBarIconControllerImpl.init(param.thisObject);
 
+                        StatusBarIconControllerImpl.getContext().startService(
+                                new Intent(
+                                        StatusBarIconControllerImpl.getContext(),
+                                        SettingsBroadcastReceiver.class));
                         Helpers.registerReceiver(
                                 StatusBarIconControllerImpl.getContext(),
                                 Constants.BROADCAST_SETTINGS_CHANGED,
@@ -65,11 +67,10 @@ public class InitReflections {
             XposedBridge.hookMethod(mth, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    String slot = (String) param.args[0];
-                    StatusBarIconControllerImpl.refreshIcons(slot);
+                    StatusBarIconControllerImpl.refreshIcons((String) param.args[0]);
                 }
             });
-        } catch (NoSuchMethodException | NoSuchFieldException e) {
+        } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }

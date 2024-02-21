@@ -53,7 +53,6 @@ public class XPosedHook implements IXposedHookLoadPackage {
     public static void findAndHookMethod(Class<?> klass, Pattern name_rex, XC_MethodHook hook) throws NoSuchMethodError {
         boolean hooked = false;
         for (Method mth : klass.getDeclaredMethods()) {
-            Log.i(TAG, mth.getName() + " ? " + name_rex);
             if (name_rex.matcher(mth.getName()).find()) {
                 XposedBridge.hookMethod(mth, hook);
                 hooked = true;

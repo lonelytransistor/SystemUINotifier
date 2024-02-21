@@ -15,14 +15,12 @@ import java.lang.reflect.InvocationTargetException;
 import de.robv.android.xposed.XposedHelpers;
 
 public class StatusBarIcon {
-    final Object self;
-    final String pkgName;
-    final Icon icon;
-
-    static Class<?> StatusBarIcon_class;
     static Constructor<?> StatusBarIcon_class_constructor_OSOIIS;
     static UserHandle UserHandle_SYSTEM;
 
+    final Object self;
+    final String pkgName;
+    final Icon icon;
     public StatusBarIcon(String pkgName, Icon icon) {
         try {
             self = StatusBarIcon_class_constructor_OSOIIS.newInstance(

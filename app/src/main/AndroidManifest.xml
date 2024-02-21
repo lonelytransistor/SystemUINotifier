@@ -10,7 +10,6 @@
     <queries>
         <intent>
             <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.action.LAUNCHER" />
         </intent>
     </queries>
     <application
@@ -18,7 +17,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="false"
-        android:theme="@style/Theme.NotificationInStatusBar"
         tools:ignore="DataExtractionRules">
         <service android:name=".ui.ApkSelectorService"
             android:label="Retrieve notification channels"

@@ -1,6 +1,5 @@
 package net.lonelytransistor.notificationinsystem.hooks;
 
-
 import android.app.Notification;
 import android.content.res.Resources;
 import android.graphics.drawable.Icon;
@@ -33,8 +32,8 @@ public class StatusBarNotificationHolder {
             smallIcon = notif.getLargeIcon();
         if (smallIcon == null)
             throw new Resources.NotFoundException("Icon not found!");
-        if (icon != null && icon.sameAs(smallIcon) && false)
-            return false;
+        /*if (icon != null && icon.sameAs(smallIcon))
+            return false;*/
         icon = new StatusBarIcon(pkgName, smallIcon, width, height);
         iconHolder = new StatusBarIconHolder(icon, uid);
         return true;
