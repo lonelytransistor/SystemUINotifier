@@ -17,13 +17,14 @@ Seems arbitrary, but the app requires access to notifications as well as access 
 
 **Screenshots:**
 
-<img src="screenshots/settings.jpg" style="height:40vh;"/><img src="screenshots/hidden_notification.jpg" style="height:40vh;"/><img src="screenshots/shown_notification.jpg" style="height:40vh;"/>
+<img src="screenshots/settings.jpg" style="width:33%;max-height:40vh;"/><img src="screenshots/hidden_notification.jpg" style="width:33%;max-height:40vh;"/><img src="screenshots/shown_notification.jpg" style="width:33%;max-height:40vh;"/>
 
 **Suggested usage**
 
 While useful in itself, the suggested usage is in conjunction with Tasker and its notifications.
 
 <img src="screenshots/example_usage.png" style="width:100%;"/>
+
 As an example you can see my own configuration as a screenshot above. This config can be achieved by downloading my Tasker xml profile [here](TaskerProfile.prj.xml) and setting the following settings within the module (note that the notification categories in Tasker only get created after its notification shows up at least once):
 
 - Tasker
