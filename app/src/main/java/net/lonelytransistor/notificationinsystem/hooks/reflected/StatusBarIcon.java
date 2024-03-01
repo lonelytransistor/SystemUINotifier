@@ -39,7 +39,9 @@ public class StatusBarIcon {
         this(pkgName, resizeIcon(icon, width, height));
     }
     public static StatusBarIcon Construct(String pkgName, StatusBarIcon siconOld, @NonNull Icon iconNew, int width, int height) {
-        if (siconOld != null) {
+        if (false) {
+            return new StatusBarIcon(pkgName, iconNew, width, height);
+        } else if (siconOld != null) {
             Icon iconOld = siconOld.icon;
             if (iconOld.getType() == Icon.TYPE_BITMAP && iconNew.getType() == Icon.TYPE_BITMAP) {
                 Context ctx = StatusBarIconControllerImpl.getContext();
@@ -77,16 +79,18 @@ public class StatusBarIcon {
             } else if ((boolean) XposedHelpers.callMethod(iconNew, "sameAs", iconOld)) {
                 return new StatusBarIcon(pkgName, iconOld);
             }
-        }
-        Context ctx = StatusBarIconControllerImpl.getContext();
-        Bitmap.Config cfg = Bitmap.Config.ARGB_8888;
-        Drawable drawableNew = iconNew.loadDrawable(ctx);
+        } else {
+            Context ctx = StatusBarIconControllerImpl.getContext();
+            Bitmap.Config cfg = Bitmap.Config.ARGB_8888;
+            Drawable drawableNew = iconNew.loadDrawable(ctx);
 
-        Bitmap bitmapNew = Bitmap.createBitmap(width, height, cfg);
-        Canvas canvasNew = new Canvas(bitmapNew);
-        drawableNew.setBounds(0, 0, canvasNew.getWidth(), canvasNew.getHeight());
-        drawableNew.draw(canvasNew);
-        return new StatusBarIcon(pkgName, Icon.createWithBitmap(bitmapNew));
+            Bitmap bitmapNew = Bitmap.createBitmap(width, height, cfg);
+            Canvas canvasNew = new Canvas(bitmapNew);
+            drawableNew.setBounds(0, 0, canvasNew.getWidth(), canvasNew.getHeight());
+            drawableNew.draw(canvasNew);
+            return new StatusBarIcon(pkgName, Icon.createWithBitmap(bitmapNew));
+        }
+        return null;
     }
 
     private static Icon resizeIcon(Icon icon, int width, int height) {

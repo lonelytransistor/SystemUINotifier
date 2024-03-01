@@ -33,9 +33,10 @@ public class StatusBarNotificationHolder {
         if (smallIcon == null)
             throw new Resources.NotFoundException("Icon not found!");
         StatusBarIcon newIcon = StatusBarIcon.Construct(pkgName, icon, smallIcon, width, height);
-        if (newIcon.equals(icon)) {
+        if (newIcon == null || Objects.equals(newIcon, icon)) {
             return false;
         } else {
+            icon = newIcon;
             iconHolder = new StatusBarIconHolder(icon, uid);
             return true;
         }
