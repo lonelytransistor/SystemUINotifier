@@ -32,11 +32,13 @@ public class StatusBarNotificationHolder {
             smallIcon = notif.getLargeIcon();
         if (smallIcon == null)
             throw new Resources.NotFoundException("Icon not found!");
-        /*if (icon != null && icon.sameAs(smallIcon))
-            return false;*/
-        icon = new StatusBarIcon(pkgName, smallIcon, width, height);
-        iconHolder = new StatusBarIconHolder(icon, uid);
-        return true;
+        StatusBarIcon newIcon = StatusBarIcon.Construct(pkgName, icon, smallIcon, width, height);
+        if (newIcon.equals(icon)) {
+            return false;
+        } else {
+            iconHolder = new StatusBarIconHolder(icon, uid);
+            return true;
+        }
     }
     StatusBarNotificationHolder(StatusBarNotification sbn, int uid, int slot, int width, int height, boolean hide) {
         this.uid = uid;
@@ -46,11 +48,13 @@ public class StatusBarNotificationHolder {
         this.hide = hide;
 
         Notification notif = sbn.getNotification();
-        key = sbn.getKey();
-        pkgName = sbn.getPackageName();
-        category = notif.category;
-        title = Helpers.getExtraString(notif.extras, Notification.EXTRA_TITLE);
-        desc = Helpers.getExtraString(notif.extras, Notification.EXTRA_TEXT);
+        this.key = sbn.getKey();
+        this.pkgName = sbn.getPackageName();
+        this.category = notif.category;
+        this.title = Helpers.getExtraString(notif.extras, Notification.EXTRA_TITLE);
+        this.desc = Helpers.getExtraString(notif.extras, Notification.EXTRA_TEXT);
+
+        this.icon = null;
         setIcon(notif);
     }
     Boolean update(StatusBarNotification sbn) throws InvalidObjectException {

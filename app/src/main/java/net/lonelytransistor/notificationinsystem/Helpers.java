@@ -35,6 +35,9 @@ public class Helpers {
     }
 
     public static void registerReceiver(Context ctx, String action, BroadcastReceiver receiver) {
+        try {
+            ctx.unregisterReceiver(receiver);
+        } catch (Exception ignored) {}
         IntentFilter fp = new IntentFilter(action);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ctx.registerReceiver(receiver, fp, Context.RECEIVER_EXPORTED);

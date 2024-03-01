@@ -103,8 +103,8 @@ public class HookSystemUI {
                 if (mNotifications.containsKey(key)) {
                     StatusBarNotificationHolder sbnh = mNotifications.get(key);
 
-                    sbnh.update(sbn);
-                    StatusBarIconControllerImpl.setIcon(sbnh.slot, sbnh.iconHolder);
+                    if (sbnh.update(sbn))
+                        StatusBarIconControllerImpl.setIcon(sbnh.slot, sbnh.iconHolder);
                     param.setResult(false);
                 } else {
                     PreferencesManager.NotificationFilter filter = PreferencesManager.getFilter(sbn);

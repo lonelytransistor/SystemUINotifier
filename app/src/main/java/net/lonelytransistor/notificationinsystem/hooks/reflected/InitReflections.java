@@ -19,6 +19,7 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class InitReflections {
+    private static final PreferencesManager.SettingsReceiver receiver = new PreferencesManager.SettingsReceiver();
     public static void init(XC_LoadPackage.LoadPackageParam lpparam) {
         try {
             Parcel parcel = Parcel.obtain();
@@ -57,7 +58,7 @@ public class InitReflections {
                         Helpers.registerReceiver(
                                 StatusBarIconControllerImpl.getContext(),
                                 Constants.BROADCAST_SETTINGS_CHANGED,
-                                new PreferencesManager.SettingsReceiver());
+                                receiver);
                         Intent intent = new Intent(Constants.BROADCAST_SETTINGS_REQUEST);
                         intent.setPackage(BuildConfig.APPLICATION_ID);
                         StatusBarIconControllerImpl.getContext().sendBroadcast(intent);
