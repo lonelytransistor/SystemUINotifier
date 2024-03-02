@@ -43,6 +43,10 @@ public class ApkSelectorService extends StoreService {
     public void save(Store.ApkInfo info, Store.Data data) {
         filters.put(info.pkgName, data);
     }
+    @Override
+    protected void cancel() {
+        sendConfig(this);
+    }
 
     @Override
     protected void onBeforeLoad() {
