@@ -28,19 +28,19 @@ While useful in itself, the suggested usage is in conjunction with Tasker and it
 As an example you can see my own configuration as a screenshot above. This config can be achieved by downloading my Tasker xml profile [here](TaskerProfile.prj.xml) and setting the following settings within the module (note that the notification categories in Tasker only get created after its notification shows up at least once):
 
 - Tasker
-    - SystemUI small
+    - SystemUI Status
         - slot: 48
         - width: 36
         - height: 36
-    - SystemUI tiny
+    - SystemUI Bars
         - slot: 48
         - width: 16
         - height: 32
-    - SystemUI wide
+    - SystemUI Clock
         - slot: 53
         - width: 92
         - height: 47
-    - SystemUI
+    - SystemUI Battery
         - slot: 52
         - width: 47
         - height: 47
