@@ -2,6 +2,7 @@ package net.lonelytransistor.notificationinsystem.hooks;
 
 import static net.lonelytransistor.notificationinsystem.hooks.XPosedHook.findAndHookMethod;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
@@ -31,14 +32,19 @@ public class HookSystemUI {
     static final Map<String, WeakReference<View>> mNotificationHiddenViews = new HashMap<>();
     private static final Set<Integer> mIconUIDs = new HashSet<>();
 
-    private static void isAboveShelf(View view) {
+    private static StatusBarNotification getSbn(Object view) {
         Object notificationEntry = XposedHelpers.getObjectField(
                 view, "mEntry");
         StatusBarNotification sbn = (StatusBarNotification) XposedHelpers.getObjectField(
                 notificationEntry, "mSbn");
-        String key = sbn.getKey();
+        return sbn;
+    }
 
+    private static void isAboveShelf(View view) {
+        StatusBarNotification sbn = getSbn(view);
+        String key = sbn.getKey();
         boolean hide;
+
         if (mNotifications.containsKey(key)) {
             StatusBarNotificationHolder sbnh = mNotifications.get(key);
             hide = sbnh.hide;
@@ -52,6 +58,7 @@ public class HookSystemUI {
             view.setVisibility(View.GONE);
         }
     }
+
     private static boolean shouldShowNotificationIcon(StatusBarNotification sbn) throws InvalidObjectException {
         String key = sbn.getKey();
         if (!mNotifications.containsKey(key))
@@ -62,10 +69,11 @@ public class HookSystemUI {
             StatusBarIconControllerImpl.setIcon(sbnh.slot, sbnh.iconHolder);
         return false;
     }
+
     private static boolean onNotificationAdded(StatusBarNotification sbn) {
         PreferencesManager.NotificationFilter filter = PreferencesManager.getFilter(sbn);
         if (filter == null)
-            return true;
+            return false;
         String key = sbn.getKey();
 
         int uid; for (uid=0; mIconUIDs.contains(uid); uid++);
@@ -77,7 +85,7 @@ public class HookSystemUI {
         mIconUIDs.add(uid);
         StatusBarIconControllerImpl.setIcon(sbnh.slot, sbnh.iconHolder);
         Log.i(TAG, "add: " + key + " " + sbnh.uid);
-        return false;
+        return true;
     }
     private static void onNotificationRemoved(StatusBarNotification sbn) {
         String key = sbn.getKey();
@@ -102,9 +110,9 @@ public class HookSystemUI {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 boolean mustStayOnScreen = (boolean) XposedHelpers.callMethod(
                         param.thisObject, "mustStayOnScreen");
-                View view = (View) param.thisObject;
+
                 if (mustStayOnScreen)
-                    isAboveShelf(view);
+                    isAboveShelf((View) param.thisObject);
             }
         });
         findAndHookMethod(klass, Pattern.compile("get.*height", Pattern.CASE_INSENSITIVE), new XC_MethodHook() {
@@ -113,11 +121,9 @@ public class HookSystemUI {
                 boolean mustStayOnScreen = (boolean) XposedHelpers.callMethod(
                         param.thisObject, "mustStayOnScreen");
                 if (!mustStayOnScreen) {
-                    Object notificationEntry = XposedHelpers.getObjectField(
-                            param.thisObject, "mEntry");
-                    StatusBarNotification sbn = (StatusBarNotification) XposedHelpers.getObjectField(
-                            notificationEntry, "mSbn");
+                    StatusBarNotification sbn = getSbn(param.thisObject);
                     String key = sbn.getKey();
+
                     if (mNotificationHiddenViews.containsKey(key))
                         param.setResult(0);
                 }
@@ -155,7 +161,7 @@ public class HookSystemUI {
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     StatusBarNotification sbn = (StatusBarNotification) XposedHelpers.getObjectField(
                             param.args[0], "mSbn");
-                    if (!shouldShowNotificationIcon(sbn) || !onNotificationAdded(sbn)) {
+                    if (!shouldShowNotificationIcon(sbn) || onNotificationAdded(sbn)) {
                         param.setResult(false);
                     }
                 }
@@ -170,17 +176,15 @@ public class HookSystemUI {
             XposedBridge.hookAllConstructors(klass, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    Object mNotifPipeline = XposedHelpers.getObjectField(
-                            param.thisObject, "mNotifPipeline");
-                    Object mNotifCollection = XposedHelpers.getObjectField(
-                            mNotifPipeline, "mNotifCollection");
-                    List<Object> mNotifCollectionListeners = (List<Object>) XposedHelpers.getObjectField(
-                            mNotifCollection, "mNotifCollectionListeners");
+                    List<Object> mNotifCollectionListeners =
+                            (List<Object>) XposedHelpers.getObjectField(XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject,
+                                    "mNotifPipeline"),
+                                    "mNotifCollection"),
+                                    "mNotifCollectionListeners");
                     Class<?> interfaceClass = XposedHelpers.findClass(
                             "com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener", lpparam.classLoader);
                     Object proxyInstance = Proxy.newProxyInstance(
-                            interfaceClass.getClassLoader(),
-                            new Class<?>[] { interfaceClass },
+                            interfaceClass.getClassLoader(), new Class<?>[] { interfaceClass },
                             (proxy, method, args) -> {
                                 if ("onEntryRemoved".equals(method.getName())) {
                                     StatusBarNotification sbn = (StatusBarNotification) XposedHelpers.getObjectField(

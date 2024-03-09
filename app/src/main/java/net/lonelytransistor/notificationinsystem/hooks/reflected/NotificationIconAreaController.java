@@ -1,10 +1,7 @@
 package net.lonelytransistor.notificationinsystem.hooks.reflected;
 
 import android.os.Build;
-
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-
 import de.robv.android.xposed.XposedHelpers;
 
 public class NotificationIconAreaController {

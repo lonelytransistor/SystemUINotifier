@@ -10,7 +10,7 @@ android {
         applicationId = "net.lonelytransistor.notificationinsystem"
         minSdk = 30
         targetSdk = 34
-        versionName = "1.3"
+        versionName = "1.4rc1"
         versionCode = 1
     }
 

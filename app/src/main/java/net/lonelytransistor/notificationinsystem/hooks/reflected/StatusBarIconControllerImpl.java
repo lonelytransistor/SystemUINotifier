@@ -108,6 +108,7 @@ public class StatusBarIconControllerImpl {
             ownIcons.put(index, new HashSet<>());
         Set<StatusBarIconHolder> icons = ownIcons.get(index);
         icons.add(holder);
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             XposedHelpers.callMethod(s, "setIcon",
                     getSlotName(clampSlot(index)), holder.self);

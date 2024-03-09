@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Objects;
 
 import de.robv.android.xposed.XposedHelpers;
 
@@ -35,29 +37,41 @@ public class StatusBarIcon {
             throw new RuntimeException(e);
         }
     }
-    public StatusBarIcon(String pkgName, Icon icon, int width, int height) {
-        this(pkgName, resizeIcon(icon, width, height));
+    private static Bitmap getBitmap(Context ctx, Icon icon, int width, int height, Bitmap.Config cfg) {
+        Drawable drawable = icon.loadDrawable(ctx);
+        Bitmap bitmap = Bitmap.createBitmap(width, height, cfg);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
+
     public static StatusBarIcon Construct(String pkgName, StatusBarIcon siconOld, @NonNull Icon iconNew, int width, int height) {
-        if (false) {
-            return new StatusBarIcon(pkgName, iconNew, width, height);
-        } else if (siconOld != null) {
-            Icon iconOld = siconOld.icon;
-            if (iconOld.getType() == Icon.TYPE_BITMAP && iconNew.getType() == Icon.TYPE_BITMAP) {
-                Context ctx = StatusBarIconControllerImpl.getContext();
-                Bitmap.Config cfg = Bitmap.Config.ARGB_8888;
-                Drawable drawableOld = iconOld.loadDrawable(ctx);
-                Drawable drawableNew = iconNew.loadDrawable(ctx);
+        Context ctx = StatusBarIconControllerImpl.getContext();
+        Bitmap.Config cfg = Bitmap.Config.ARGB_8888;
 
-                Bitmap bitmapNew = Bitmap.createBitmap(width, height, cfg);
-                Canvas canvasNew = new Canvas(bitmapNew);
-                drawableNew.setBounds(0, 0, canvasNew.getWidth(), canvasNew.getHeight());
-                drawableNew.draw(canvasNew);
+        if (siconOld == null) {
+            return new StatusBarIcon(pkgName, Icon.createWithBitmap(
+                    getBitmap(ctx, iconNew, width, height, cfg)));
+        }
 
-                Bitmap bitmapOld = Bitmap.createBitmap(width, height, cfg);
-                Canvas canvasOld = new Canvas(bitmapOld);
-                drawableOld.setBounds(0, 0, canvasOld.getWidth(), canvasOld.getHeight());
-                drawableOld.draw(canvasOld);
+        Icon iconOld = siconOld.icon;
+        if (iconNew == iconOld) {
+            return siconOld;
+        }
+
+        int typeOld = iconOld.getType();
+        int typeNew = iconNew.getType();
+        if (typeOld != typeNew) {
+            return new StatusBarIcon(pkgName, Icon.createWithBitmap(
+                    getBitmap(ctx, iconNew, width, height, cfg)));
+        }
+
+        switch (typeNew) {
+            case Icon.TYPE_BITMAP:
+            case Icon.TYPE_ADAPTIVE_BITMAP:
+                Bitmap bitmapNew = getBitmap(ctx, iconNew, width, height, cfg);
+                Bitmap bitmapOld = getBitmap(ctx, iconOld, width, height, cfg);
 
                 Bitmap bitmapCmp = Bitmap.createBitmap(width, height, cfg);
                 Canvas canvasCmp = new Canvas(bitmapCmp);
@@ -75,33 +89,38 @@ public class StatusBarIcon {
                         }
                     }
                 }
-                return new StatusBarIcon(pkgName, iconOld);
-            } else if ((boolean) XposedHelpers.callMethod(iconNew, "sameAs", iconOld)) {
-                return new StatusBarIcon(pkgName, iconOld);
-            }
-        } else {
-            Context ctx = StatusBarIconControllerImpl.getContext();
-            Bitmap.Config cfg = Bitmap.Config.ARGB_8888;
-            Drawable drawableNew = iconNew.loadDrawable(ctx);
-
-            Bitmap bitmapNew = Bitmap.createBitmap(width, height, cfg);
-            Canvas canvasNew = new Canvas(bitmapNew);
-            drawableNew.setBounds(0, 0, canvasNew.getWidth(), canvasNew.getHeight());
-            drawableNew.draw(canvasNew);
-            return new StatusBarIcon(pkgName, Icon.createWithBitmap(bitmapNew));
+                return siconOld;
+            case Icon.TYPE_RESOURCE:
+                if (iconOld.getResId() == iconNew.getResId() &&
+                        Objects.equals(iconOld.getResPackage(), iconNew.getResPackage())) {
+                    return siconOld;
+                }
+                break;
+            case Icon.TYPE_URI:
+            case Icon.TYPE_URI_ADAPTIVE_BITMAP:
+                if (iconOld.getUri().compareTo(iconNew.getUri()) == 0) {
+                    return siconOld;
+                }
+                break;
+            case Icon.TYPE_DATA:
+                int lenOld = (int) XposedHelpers.callMethod(iconOld, "getDataLength");
+                int lenNew = (int) XposedHelpers.callMethod(iconNew, "getDataLength");
+                if (lenOld != lenNew)
+                    break;
+                int offOld = (int) XposedHelpers.callMethod(iconOld, "getDataOffset");
+                int offNew = (int) XposedHelpers.callMethod(iconNew, "getDataOffset");
+                if (offOld != offNew)
+                    break;
+                byte[] dataOld = (byte[]) XposedHelpers.callMethod(iconOld, "getDataBytes");
+                byte[] dataNew = (byte[]) XposedHelpers.callMethod(iconNew, "getDataBytes");
+                if (!Arrays.equals(dataOld, dataNew))
+                    break;
+                return siconOld;
+            default:
+                break;
         }
-        return null;
-    }
 
-    private static Icon resizeIcon(Icon icon, int width, int height) {
-        Drawable drawable = icon.loadDrawable(StatusBarIconControllerImpl.getContext());
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        Icon icon_new = Icon.createWithBitmap(bitmap);
-        //icon_new.setTintBlendMode(BlendMode.SOFT_LIGHT);
-
-        return icon_new;
+        return new StatusBarIcon(pkgName, Icon.createWithBitmap(
+                getBitmap(ctx, iconNew, width, height, cfg)));
     }
 }
