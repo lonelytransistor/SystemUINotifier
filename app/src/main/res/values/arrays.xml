@@ -2,6 +2,7 @@
 <resources>
     <string-array name="module_scope" translatable="false">
         <item>com.android.systemui</item>
+        <item>com.android.settings</item>
         <item>net.lonelytransistor.notificationinsystem</item>
     </string-array>
 </resources>

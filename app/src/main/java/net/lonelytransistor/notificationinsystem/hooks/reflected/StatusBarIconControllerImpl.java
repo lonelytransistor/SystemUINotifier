@@ -1,11 +1,14 @@
 package net.lonelytransistor.notificationinsystem.hooks.reflected;
 
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,15 +19,11 @@ public class StatusBarIconControllerImpl {
 
     static WeakReference<Object> self = new WeakReference<>(null);
     static Map<Integer, Set<StatusBarIconHolder>> ownIcons = new HashMap<>();
+    private static final List<String> slotsSnapshot = new ArrayList<>();
     static void init(Object self_) {
         self = new WeakReference<>(self_);
     }
-    public static Context getContext() {
-        if (self.get() == null)
-            return null;
 
-        return (Context) XposedHelpers.getObjectField(self.get(), "mContext");
-    }
     private static int clampSlot(int slot) {
         slot = Math.max(slot, 0);
         slot = Math.min(slot, getMaxSlots()-1);
@@ -79,21 +78,47 @@ public class StatusBarIconControllerImpl {
         }
         return null;
     }
+    public static int getMaxSlots() {
+        updateSlotsDb();
+        return slotsSnapshot.size();
+    }
+    public static int getSlotIndex(String name) {
+        updateSlotsDb();
+        return slotsSnapshot.indexOf(name);
+    }
+    public static String getSlotName(int index) {
+        updateSlotsDb();
+        return slotsSnapshot.get(index);
+    }
 
+    // Reflected
+    public static Context getContext() {
+        Object s = self.get();
+        if (s == null)
+            return null;
+
+        return (Context) XposedHelpers.getObjectField(s, "mContext");
+    }
     public static void setIcon(int index, StatusBarIconHolder holder) {
-        if (self.get() == null)
+        Object s = self.get();
+        if (s == null)
             return;
 
         if (!ownIcons.containsKey(index))
             ownIcons.put(index, new HashSet<>());
         Set<StatusBarIconHolder> icons = ownIcons.get(index);
         icons.add(holder);
-
-        XposedHelpers.callMethod(self.get(), "setIcon",
-                clampSlot(index), holder.self);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            XposedHelpers.callMethod(s, "setIcon",
+                    getSlotName(clampSlot(index)), holder.self);
+        } else {
+            XposedHelpers.callMethod(s, "setIcon",
+                    clampSlot(index), holder.self);
+        }
     }
     public static void removeIcon(int index, int tag) {
-        if (self.get() == null)
+        Object s = self.get();
+        if (s == null)
             return;
 
         StatusBarIconHolder holder = getHolder(index, -1, tag);
@@ -101,28 +126,61 @@ public class StatusBarIconControllerImpl {
             return;
         ownIcons.get(index).remove(holder);
 
-        XposedHelpers.callMethod(self.get(), "removeIcon",
-                clampSlot(index), holder.tag);
+        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
+            // WTF IS THIS
+            Object mStatusBarIconList = XposedHelpers.getObjectField(s, "mStatusBarIconList");
+            List<Object> mSlots = (ArrayList<Object>) XposedHelpers.getObjectField(mStatusBarIconList, "mSlots");
+            List<Object> mIconGroups = (ArrayList<Object>) XposedHelpers.getObjectField(s, "mIconGroups");
+            int pos = 0;
+            for (int ix=0; ix<mSlots.size(); ix++) {
+                Object slot = mSlots.get(ix);
+                Object mSubSlots = XposedHelpers.getObjectField(slot, "mSubSlots");
+                Object mHolder = XposedHelpers.getObjectField(slot, "mHolder");
+                if (ix == index) {
+                    if (tag == 0) {
+                        XposedHelpers.setObjectField(slot, "mHolder", null);
+                    } else {
+                        int six = (int) XposedHelpers.callMethod(slot, "getIndexForTag", tag);
+                        if (six != -1 && mSubSlots != null) {
+                            ((List<Object>) mSubSlots).remove(six);
+                            pos += six;
+                        }
+                    }
+                    int poss = pos;
+                    mIconGroups.forEach(l -> XposedHelpers.callMethod(l, "onRemoveIcon", poss));
+                    break;
+                }
+                if (mHolder != null) {
+                    pos += 1;
+                }
+                if (mSubSlots != null) {
+                    pos += 1 + ((List<Object>) mSubSlots).size();
+                }
+            }
+        } else if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
+            XposedHelpers.callMethod(s, "removeIcon",
+                    getSlotName(clampSlot(index)), tag);
+        } else {
+            XposedHelpers.callMethod(s, "removeIcon",
+                    clampSlot(index), tag);
+        }
     }
-    public static int getMaxSlots() {
-        if (self.get() == null)
-            return 0;
+    private static void updateSlotsDb() {
+        Object s = self.get();
+        if (s == null)
+            return;
 
-        ArrayList<Object> slots = (ArrayList<Object>) XposedHelpers.callMethod(self.get(), "getSlots");
-        return slots.size();
-    }
-    public static int getSlotIndex(String name) {
-        if (self.get() == null)
-            return -1;
+        List<Object> slots;
+        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
+            Object mStatusBarIconList = XposedHelpers.getObjectField(s, "mStatusBarIconList");
+            slots = (ArrayList<Object>) XposedHelpers.getObjectField(mStatusBarIconList, "mSlots");
+        } else {
+            slots = (ArrayList<Object>) XposedHelpers.getObjectField(s, "mSlots");
+        }
 
-        return (int) XposedHelpers.callMethod(self.get(), "getSlotIndex",
-                name);
-    }
-    public static String getSlotName(int index) {
-        if (self.get() == null)
-            return null;
-
-        return (String) XposedHelpers.callMethod(self.get(), "getSlotName",
-                clampSlot(index));
+        slotsSnapshot.clear();
+        for (Object slot : slots) {
+            slotsSnapshot.add((String) XposedHelpers.getObjectField(slot,"mName"));
+        }
     }
 }

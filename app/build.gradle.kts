@@ -65,6 +65,5 @@ dependencies {
     implementation ("androidx.appcompat:appcompat:1.6.1")
 
     implementation(project(mapOf("path" to ":commonlib")))
-
     compileOnly ("de.robv.android.xposed:api:82")
 }

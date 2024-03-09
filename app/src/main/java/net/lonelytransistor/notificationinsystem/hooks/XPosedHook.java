@@ -3,8 +3,6 @@ package net.lonelytransistor.notificationinsystem.hooks;
 import android.util.Log;
 
 import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -71,9 +69,10 @@ public class XPosedHook implements IXposedHookLoadPackage {
     }
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        if (lpparam.packageName.equals("net.lonelytransistor.notificationinsystem"))
-            HookSelf.handleLoadPackage(lpparam);
-        if (lpparam.packageName.equals("com.android.systemui"))
-            HookSystemUI.handleLoadPackage(lpparam);
+        switch (lpparam.packageName) {
+            case "net.lonelytransistor.notificationinsystem" -> HookSelf.handleLoadPackage(lpparam);
+            case "com.android.systemui" -> HookSystemUI.handleLoadPackage(lpparam);
+            case "com.android.settings" -> HookSettings.handleLoadPackage(lpparam);
+        }
     }
 }
