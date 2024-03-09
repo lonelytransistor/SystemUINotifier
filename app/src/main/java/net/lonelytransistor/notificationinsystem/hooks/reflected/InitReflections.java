@@ -1,6 +1,9 @@
 package net.lonelytransistor.notificationinsystem.hooks.reflected;
 
-import static net.lonelytransistor.notificationinsystem.hooks.XPosedHook.findAndHookMethod;
+import static net.lonelytransistor.notificationinsystem.Helpers.findAndHookMethod;
+
+import static de.robv.android.xposed.XposedBridge.hookAllConstructors;
+import static de.robv.android.xposed.XposedHelpers.findClass;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,26 +33,26 @@ public class InitReflections {
         parcel.writeInt(0);
         StatusBarIcon.UserHandle_SYSTEM = new UserHandle(parcel);
 
-        Class<?> klass = XposedHelpers.findClass(
+        Class<?> klass = findClass(
                 "com.android.internal.statusbar.StatusBarIcon", lpparam.classLoader);
         StatusBarIcon.StatusBarIcon_class_constructor_OSOIIS = XposedHelpers.findConstructorBestMatch(
                 klass,
                 UserHandle.class, String.class, Icon.class, Integer.class, Integer.class, CharSequence.class);
 
-        klass = XposedHelpers.findClass(
+        klass = findClass(
                 "com.android.systemui.statusbar.phone.StatusBarIconHolder", lpparam.classLoader);
         StatusBarIconHolder.StatusBarIconHolder_constructor = XposedHelpers.findConstructorBestMatch(klass);
 
-        klass = XposedHelpers.findClass(
+        klass = findClass(
                 "com.android.systemui.statusbar.phone.NotificationIconAreaController", lpparam.classLoader);
-        XposedBridge.hookAllConstructors(klass, new XC_MethodHook() {
+        hookAllConstructors(klass, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 NotificationIconAreaController.init(param.thisObject);
             }
         });
 
-        klass = XposedHelpers.findClass(
+        klass = findClass(
                 "com.android.systemui.statusbar.phone.StatusBarIconControllerImpl", lpparam.classLoader);
         findAndHookMethod(klass, Pattern.compile("removeAllIconsForSlot", Pattern.CASE_INSENSITIVE), new XC_MethodHook() {
             @Override
@@ -57,7 +60,7 @@ public class InitReflections {
                 StatusBarIconControllerImpl.refreshIcons((String) param.args[0]);
             }
         });
-        XposedBridge.hookAllConstructors(klass, new XC_MethodHook() {
+        hookAllConstructors(klass, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 StatusBarIconControllerImpl.init(param.thisObject);

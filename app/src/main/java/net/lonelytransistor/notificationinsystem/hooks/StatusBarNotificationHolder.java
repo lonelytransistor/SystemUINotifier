@@ -32,14 +32,14 @@ public class StatusBarNotificationHolder {
             smallIcon = notif.getLargeIcon();
         if (smallIcon == null)
             throw new Resources.NotFoundException("Icon not found!");
+
         StatusBarIcon newIcon = StatusBarIcon.Construct(pkgName, icon, smallIcon, width, height);
-        if (newIcon == null || Objects.equals(newIcon, icon)) {
+        if (newIcon == null || Objects.equals(newIcon, icon))
             return false;
-        } else {
-            icon = newIcon;
-            iconHolder = new StatusBarIconHolder(icon, uid);
-            return true;
-        }
+
+        icon = newIcon;
+        iconHolder = new StatusBarIconHolder(icon, uid);
+        return true;
     }
     StatusBarNotificationHolder(StatusBarNotification sbn, int uid, int slot, int width, int height, boolean hide) {
         this.uid = uid;

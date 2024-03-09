@@ -1,8 +1,10 @@
 package net.lonelytransistor.notificationinsystem.hooks;
 
-import static net.lonelytransistor.notificationinsystem.hooks.XPosedHook.findAndHookMethod;
+import static net.lonelytransistor.notificationinsystem.Helpers.findAndHookMethod;
 
-import android.annotation.SuppressLint;
+import static de.robv.android.xposed.XposedHelpers.callMethod;
+import static de.robv.android.xposed.XposedHelpers.findClass;
+
 import android.os.Build;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
@@ -100,15 +102,17 @@ public class HookSystemUI {
         Log.i(TAG, "remove: " + key + " " + sbnh.uid);
     }
 
+
+
     static void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        Class<?> klass;
         InitReflections.init(lpparam);
-        klass = XposedHelpers.findClass(
-                "com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.classLoader);
+        Class<?> klass;
+
+        klass = findClass("com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.classLoader);
         findAndHookMethod(klass, "isAboveShelf", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                boolean mustStayOnScreen = (boolean) XposedHelpers.callMethod(
+                boolean mustStayOnScreen = (boolean) callMethod(
                         param.thisObject, "mustStayOnScreen");
 
                 if (mustStayOnScreen)
@@ -118,8 +122,7 @@ public class HookSystemUI {
         findAndHookMethod(klass, Pattern.compile("get.*height", Pattern.CASE_INSENSITIVE), new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                boolean mustStayOnScreen = (boolean) XposedHelpers.callMethod(
-                        param.thisObject, "mustStayOnScreen");
+                boolean mustStayOnScreen = (boolean) callMethod(param.thisObject, "mustStayOnScreen");
                 if (!mustStayOnScreen) {
                     StatusBarNotification sbn = getSbn(param.thisObject);
                     String key = sbn.getKey();
@@ -130,32 +133,28 @@ public class HookSystemUI {
             }
         });
 
-        klass = XposedHelpers.findClass("com.android.systemui.statusbar.phone.StatusBarIconController", lpparam.classLoader);
+        klass = findClass("com.android.systemui.statusbar.phone.StatusBarIconController", lpparam.classLoader);
         findAndHookMethod(klass, Pattern.compile("IconManager"), "onIconAdded", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 String slot = (String) param.args[1];
                 Object holder = param.args[3];
-                int tag = (int) XposedHelpers.callMethod(holder, "getTag");
-                if (StatusBarIconControllerImpl.getUid(
-                        StatusBarIconControllerImpl.getSlotIndex(slot), tag) >= 0
-                ) {
+                int tag = (int) callMethod(holder, "getTag");
+                if (StatusBarIconControllerImpl.getUid(StatusBarIconControllerImpl.getSlotIndex(slot), tag) >= 0) {
                     param.args[2] = false;
                 }
             }
         });
 
         if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
-            klass = XposedHelpers.findClass(
-                    "com.android.systemui.ForegroundServiceNotificationListener", lpparam.classLoader);
+            klass = findClass("com.android.systemui.ForegroundServiceNotificationListener", lpparam.classLoader);
             findAndHookMethod(klass, "removeNotification", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) {
                     onNotificationRemoved((StatusBarNotification) param.args[0]);
                 }
             });
-            klass = XposedHelpers.findClass(
-                    "com.android.systemui.statusbar.phone.NotificationIconAreaController", lpparam.classLoader);
+            klass = findClass("com.android.systemui.statusbar.phone.NotificationIconAreaController", lpparam.classLoader);
             findAndHookMethod(klass, "shouldShowNotificationIcon", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -171,8 +170,7 @@ public class HookSystemUI {
 
 
             // Thomas had never seen such bullshit before
-            klass = XposedHelpers.findClass(
-                    "com.android.systemui.ForegroundServiceNotificationListener", lpparam.classLoader);
+            klass = findClass("com.android.systemui.ForegroundServiceNotificationListener", lpparam.classLoader);
             XposedBridge.hookAllConstructors(klass, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -181,7 +179,7 @@ public class HookSystemUI {
                                     "mNotifPipeline"),
                                     "mNotifCollection"),
                                     "mNotifCollectionListeners");
-                    Class<?> interfaceClass = XposedHelpers.findClass(
+                    Class<?> interfaceClass = findClass(
                             "com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener", lpparam.classLoader);
                     Object proxyInstance = Proxy.newProxyInstance(
                             interfaceClass.getClassLoader(), new Class<?>[] { interfaceClass },
@@ -200,8 +198,7 @@ public class HookSystemUI {
                     mNotifCollectionListeners.add(proxyInstance);
                 }
             });
-            klass = XposedHelpers.findClass(
-                    "com.android.systemui.statusbar.notification.collection.NotificationEntry", lpparam.classLoader);
+            klass = findClass("com.android.systemui.statusbar.notification.collection.NotificationEntry", lpparam.classLoader);
             findAndHookMethod(klass, "shouldSuppressVisualEffect", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {

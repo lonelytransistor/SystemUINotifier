@@ -1,6 +1,6 @@
 package net.lonelytransistor.notificationinsystem.hooks;
 
-import static net.lonelytransistor.notificationinsystem.hooks.XPosedHook.findAndHookMethod;
+import static net.lonelytransistor.notificationinsystem.Helpers.findAndHookMethod;
 
 import java.util.regex.Pattern;
 
