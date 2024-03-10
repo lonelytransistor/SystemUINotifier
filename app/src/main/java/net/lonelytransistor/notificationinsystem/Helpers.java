@@ -1,5 +1,7 @@
 package net.lonelytransistor.notificationinsystem;
 
+import static net.lonelytransistor.notificationinsystem.Constants.DEBUG;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -96,6 +98,7 @@ public class Helpers {
     public static void registerReceiver(Context ctx, String action, BroadcastReceiver receiver) {
         try {
             ctx.unregisterReceiver(receiver);
+            DEBUG("Unregistered old receiver.");
         } catch (Exception ignored) {}
         IntentFilter fp = new IntentFilter(action);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -103,6 +106,7 @@ public class Helpers {
         } else {
             ctx.registerReceiver(receiver, fp);
         }
+        DEBUG("Registered receiver.");
     }
     public static String getExtraString(Bundle extras, String name) {
         Object obj = extras.get(name);
@@ -121,6 +125,7 @@ public class Helpers {
         sendConfig(ctx, prefs.getXml());
     }
     public static void sendConfig(Context ctx, byte[] data) {
+        DEBUG("Sending config");
         Intent intent = new Intent(Constants.BROADCAST_SETTINGS_CHANGED);
         intent.setPackage("com.android.systemui");
         intent.putExtra(Constants.APK_PREF_KEY, data);

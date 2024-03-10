@@ -1,5 +1,7 @@
 package net.lonelytransistor.notificationinsystem.hooks.reflected;
 
+import static net.lonelytransistor.notificationinsystem.Constants.DEBUG;
+
 import net.lonelytransistor.notificationinsystem.Constants;
 import java.lang.reflect.Constructor;
 import de.robv.android.xposed.XposedHelpers;
@@ -21,5 +23,6 @@ public class StatusBarIconHolder {
         tag = tag_ + Constants.TAG_PREFIX;
         XposedHelpers.setObjectField(self, "mIcon", icon.self);
         XposedHelpers.setIntField(self, "mTag", tag);
+        DEBUG("New StatusBarIconHolder created");
     }
 }

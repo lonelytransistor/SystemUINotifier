@@ -1,5 +1,7 @@
 package net.lonelytransistor.notificationinsystem.hooks;
 
+import static net.lonelytransistor.notificationinsystem.Constants.DEBUG;
+
 import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -104,7 +106,7 @@ public class PreferencesManager {
     static void setNotificationFilters(Map<String, Map<String, NotificationFilter>> filters) {
         mutex.lock();
         mNotificationFilter = filters;
-        Log.i(TAG, "Set filters: " + filters);
+        DEBUG("New notification filters: " + filters);
         mutex.unlock();
 
         StatusBarIconControllerImpl.removeAllOwnIcons();

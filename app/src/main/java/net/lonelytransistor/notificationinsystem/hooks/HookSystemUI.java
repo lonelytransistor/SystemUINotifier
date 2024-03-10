@@ -1,5 +1,6 @@
 package net.lonelytransistor.notificationinsystem.hooks;
 
+import static net.lonelytransistor.notificationinsystem.Constants.DEBUG;
 import static net.lonelytransistor.notificationinsystem.Helpers.findAndHookMethod;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
@@ -16,11 +17,13 @@ import net.lonelytransistor.notificationinsystem.hooks.reflected.StatusBarIconCo
 import java.io.InvalidObjectException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -43,6 +46,8 @@ public class HookSystemUI {
     }
 
     private static void isAboveShelf(View view) {
+        DEBUG("isAboveShelf");
+
         StatusBarNotification sbn = getSbn(view);
         String key = sbn.getKey();
         boolean hide;
@@ -62,6 +67,8 @@ public class HookSystemUI {
     }
 
     private static boolean shouldShowNotificationIcon(StatusBarNotification sbn) throws InvalidObjectException {
+        DEBUG("shouldShowNotificationIcon");
+
         String key = sbn.getKey();
         if (!mNotifications.containsKey(key))
             return true;
@@ -73,6 +80,8 @@ public class HookSystemUI {
     }
 
     private static boolean onNotificationAdded(StatusBarNotification sbn) {
+        DEBUG("Notification added");
+
         PreferencesManager.NotificationFilter filter = PreferencesManager.getFilter(sbn);
         if (filter == null)
             return false;
@@ -86,10 +95,12 @@ public class HookSystemUI {
 
         mIconUIDs.add(uid);
         StatusBarIconControllerImpl.setIcon(sbnh.slot, sbnh.iconHolder);
-        Log.i(TAG, "add: " + key + " " + sbnh.uid);
+        Log.i(TAG, "Add to system icons: " + key + " " + sbnh.uid);
         return true;
     }
     private static void onNotificationRemoved(StatusBarNotification sbn) {
+        DEBUG("Notification removed");
+
         String key = sbn.getKey();
         if (!mNotifications.containsKey(key))
             return;
@@ -99,13 +110,15 @@ public class HookSystemUI {
         mNotificationHiddenViews.remove(key);
         mIconUIDs.remove(sbnh.uid);
         StatusBarIconControllerImpl.removeIcon(sbnh.slot, sbnh.iconHolder);
-        Log.i(TAG, "remove: " + key + " " + sbnh.uid);
+        Log.i(TAG, "Remove from system icons: " + key + " " + sbnh.uid);
     }
 
 
 
     static void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+        DEBUG("Loading SystemUI hook.");
         InitReflections.init(lpparam);
+        DEBUG("Reflections initialized.");
         Class<?> klass;
 
         klass = findClass("com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", lpparam.classLoader);
@@ -147,6 +160,7 @@ public class HookSystemUI {
         });
 
         if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
+            DEBUG("Pre-Android14.");
             klass = findClass("com.android.systemui.ForegroundServiceNotificationListener", lpparam.classLoader);
             findAndHookMethod(klass, "removeNotification", new XC_MethodHook() {
                 @Override
@@ -166,6 +180,7 @@ public class HookSystemUI {
                 }
             });
         } else {
+            DEBUG("Post TIRAMISU.");
 
 
 
@@ -174,11 +189,11 @@ public class HookSystemUI {
             XposedBridge.hookAllConstructors(klass, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    List<Object> mNotifCollectionListeners =
-                            (List<Object>) XposedHelpers.getObjectField(XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject,
-                                    "mNotifPipeline"),
-                                    "mNotifCollection"),
-                                    "mNotifCollectionListeners");
+                    DEBUG("Starting post TIRAMISU notification hook");
+                    List<Object> mNotifCollectionListeners = (List<Object>) XposedHelpers.getObjectField(XposedHelpers.getObjectField(XposedHelpers.getObjectField(param.thisObject,
+                            "mNotifPipeline"),
+                            "mNotifCollection"),
+                            "mNotifCollectionListeners");
                     Class<?> interfaceClass = findClass(
                             "com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener", lpparam.classLoader);
                     Object proxyInstance = Proxy.newProxyInstance(
@@ -196,18 +211,39 @@ public class HookSystemUI {
                                 return null;
                             });
                     mNotifCollectionListeners.add(proxyInstance);
+                    DEBUG("Added a post TIRAMISU proxied notification listener");
                 }
             });
-            klass = findClass("com.android.systemui.statusbar.notification.collection.NotificationEntry", lpparam.classLoader);
-            findAndHookMethod(klass, "shouldSuppressVisualEffect", new XC_MethodHook() {
+            klass = findClass("com.android.systemui.statusbar.phone.NotificationIconAreaController", lpparam.classLoader);
+            findAndHookMethod(klass, "updateIconsForLayout", new XC_MethodHook() {
+                final ReentrantLock mutex = new ReentrantLock(); //Not sure if needed.
+                List<Object> entries = null;
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    StatusBarNotification sbn = (StatusBarNotification) XposedHelpers.getObjectField(
-                            param.thisObject, "mSbn");
-                    if (!shouldShowNotificationIcon(sbn))
-                        param.setResult(true);
+                    DEBUG("Post TIRAMISU shouldShowNotificationIcon enter start");
+                    entries = (List<Object>) XposedHelpers.getObjectField(param.thisObject, "mNotificationEntries");
+                    List<Object> tmpEntries = new ArrayList<>();
+                    for (Object entryWrapper : entries) {
+                        Object entry = XposedHelpers.callMethod(entryWrapper,"getRepresentativeEntry");
+                        StatusBarNotification sbn = (StatusBarNotification) XposedHelpers.getObjectField(
+                                entry, "mSbn");
+                        if (shouldShowNotificationIcon(sbn) && !onNotificationAdded(sbn)) {
+                            tmpEntries.add(entry);
+                        }
+                    }
+                    mutex.lock();
+                    XposedHelpers.setObjectField(param.thisObject,"mNotificationEntries",tmpEntries);
+                    DEBUG("Post TIRAMISU shouldShowNotificationIcon exit start");
+                }
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    DEBUG("Post TIRAMISU shouldShowNotificationIcon enter stop");
+                    XposedHelpers.setObjectField(param.thisObject,"mNotificationEntries", entries);
+                    mutex.unlock();
+                    DEBUG("Post TIRAMISU shouldShowNotificationIcon exit stop");
                 }
             });
         }
+        DEBUG("All done.");
     }
 }

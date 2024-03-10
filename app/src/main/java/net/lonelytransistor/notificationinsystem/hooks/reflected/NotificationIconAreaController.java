@@ -1,5 +1,7 @@
 package net.lonelytransistor.notificationinsystem.hooks.reflected;
 
+import static net.lonelytransistor.notificationinsystem.Constants.DEBUG;
+
 import android.os.Build;
 import java.lang.ref.WeakReference;
 import de.robv.android.xposed.XposedHelpers;
@@ -16,11 +18,12 @@ public class NotificationIconAreaController {
         if (s == null)
             return;
 
-        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
+        DEBUG("updateNotificationIcons called");
+        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
+            XposedHelpers.callMethod(s,"updateNotificationIcons");
+        } else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             XposedHelpers.callMethod(s,"updateNotificationIcons",
                     XposedHelpers.getObjectField(s, "mNotificationEntries"));
-        } else {
-            XposedHelpers.callMethod(s,"updateNotificationIcons");
         }
     }
 }

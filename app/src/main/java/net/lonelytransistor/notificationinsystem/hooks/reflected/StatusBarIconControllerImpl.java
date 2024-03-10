@@ -1,5 +1,7 @@
 package net.lonelytransistor.notificationinsystem.hooks.reflected;
 
+import static net.lonelytransistor.notificationinsystem.Constants.DEBUG;
+
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
@@ -97,6 +99,7 @@ public class StatusBarIconControllerImpl {
         if (s == null)
             return null;
 
+        DEBUG("getContext called");
         return (Context) XposedHelpers.getObjectField(s, "mContext");
     }
     public static void setIcon(int index, StatusBarIconHolder holder) {
@@ -109,12 +112,13 @@ public class StatusBarIconControllerImpl {
         Set<StatusBarIconHolder> icons = ownIcons.get(index);
         icons.add(holder);
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            XposedHelpers.callMethod(s, "setIcon",
-                    getSlotName(clampSlot(index)), holder.self);
-        } else {
+        DEBUG("setIcon called");
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             XposedHelpers.callMethod(s, "setIcon",
                     clampSlot(index), holder.self);
+        } else {
+            XposedHelpers.callMethod(s, "setIcon",
+                    getSlotName(clampSlot(index)), holder.self);
         }
     }
     public static void removeIcon(int index, int tag) {
@@ -127,7 +131,14 @@ public class StatusBarIconControllerImpl {
             return;
         ownIcons.get(index).remove(holder);
 
-        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
+        DEBUG("removeIcon called");
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            XposedHelpers.callMethod(s, "removeIcon",
+                    clampSlot(index), tag);
+        } else if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
+            XposedHelpers.callMethod(s, "removeIcon",
+                    getSlotName(clampSlot(index)), tag);
+        } else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             // WTF IS THIS
             Object mStatusBarIconList = XposedHelpers.getObjectField(s, "mStatusBarIconList");
             List<Object> mSlots = (ArrayList<Object>) XposedHelpers.getObjectField(mStatusBarIconList, "mSlots");
@@ -148,7 +159,7 @@ public class StatusBarIconControllerImpl {
                         }
                     }
                     int poss = pos;
-                    mIconGroups.forEach(l -> XposedHelpers.callMethod(l, "onRemoveIcon", poss));
+                    mIconGroups.forEach(l -> { if (l != null) XposedHelpers.callMethod(l, "onRemoveIcon", poss); });
                     break;
                 }
                 if (mHolder != null) {
@@ -158,12 +169,6 @@ public class StatusBarIconControllerImpl {
                     pos += 1 + ((List<Object>) mSubSlots).size();
                 }
             }
-        } else if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
-            XposedHelpers.callMethod(s, "removeIcon",
-                    getSlotName(clampSlot(index)), tag);
-        } else {
-            XposedHelpers.callMethod(s, "removeIcon",
-                    clampSlot(index), tag);
         }
     }
     private static void updateSlotsDb() {
@@ -172,11 +177,11 @@ public class StatusBarIconControllerImpl {
             return;
 
         List<Object> slots;
-        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            slots = (ArrayList<Object>) XposedHelpers.getObjectField(s, "mSlots");
+        } else {
             Object mStatusBarIconList = XposedHelpers.getObjectField(s, "mStatusBarIconList");
             slots = (ArrayList<Object>) XposedHelpers.getObjectField(mStatusBarIconList, "mSlots");
-        } else {
-            slots = (ArrayList<Object>) XposedHelpers.getObjectField(s, "mSlots");
         }
 
         slotsSnapshot.clear();

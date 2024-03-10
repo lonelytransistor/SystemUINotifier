@@ -1,9 +1,17 @@
 package net.lonelytransistor.notificationinsystem;
 
 import android.os.Environment;
+import android.util.Log;
 
 public class Constants {
     private static final String TAG = "Constants";
+    private static final String GLOBAL_TAG = "LoTrBoot";
+
+    public static void DEBUG(String msg) {
+        if (BuildConfig.DEBUG) {
+            Log.i(GLOBAL_TAG, msg);
+        }
+    }
 
     public static final int TAG_PREFIX = 0x20;
 

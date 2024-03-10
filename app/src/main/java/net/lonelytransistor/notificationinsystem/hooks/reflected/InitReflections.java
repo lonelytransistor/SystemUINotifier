@@ -1,5 +1,6 @@
 package net.lonelytransistor.notificationinsystem.hooks.reflected;
 
+import static net.lonelytransistor.notificationinsystem.Constants.DEBUG;
 import static net.lonelytransistor.notificationinsystem.Helpers.findAndHookMethod;
 
 import static de.robv.android.xposed.XposedBridge.hookAllConstructors;
@@ -29,6 +30,8 @@ public class InitReflections {
     private static final String TAG = "InitReflections";
     private static final PreferencesManager.SettingsReceiver receiver = new PreferencesManager.SettingsReceiver();
     public static void init(XC_LoadPackage.LoadPackageParam lpparam) {
+        DEBUG("Initializing reflections.");
+
         Parcel parcel = Parcel.obtain();
         parcel.writeInt(0);
         StatusBarIcon.UserHandle_SYSTEM = new UserHandle(parcel);
@@ -48,7 +51,9 @@ public class InitReflections {
         hookAllConstructors(klass, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                DEBUG("NotificationIconAreaController created.");
                 NotificationIconAreaController.init(param.thisObject);
+                DEBUG("NotificationIconAreaController initialized.");
             }
         });
 
@@ -57,12 +62,15 @@ public class InitReflections {
         findAndHookMethod(klass, Pattern.compile("removeAllIconsForSlot", Pattern.CASE_INSENSITIVE), new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                DEBUG("removeAllIconsForSlot intercepted");
                 StatusBarIconControllerImpl.refreshIcons((String) param.args[0]);
+                DEBUG("removeAllIconsForSlot exit");
             }
         });
         hookAllConstructors(klass, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                DEBUG("StatusBarIconControllerImpl created.");
                 StatusBarIconControllerImpl.init(param.thisObject);
 
                 Context ctx = StatusBarIconControllerImpl.getContext();
@@ -72,6 +80,7 @@ public class InitReflections {
                 intent = new Intent(Constants.BROADCAST_SETTINGS_REQUEST);
                 intent.setPackage(BuildConfig.APPLICATION_ID);
                 ctx.sendBroadcast(intent);
+                DEBUG("StatusBarIconControllerImpl initialized.");
             }
         });
     }

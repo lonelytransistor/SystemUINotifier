@@ -1,5 +1,7 @@
 package net.lonelytransistor.notificationinsystem.hooks.reflected;
 
+import static net.lonelytransistor.notificationinsystem.Constants.DEBUG;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
@@ -36,6 +38,7 @@ public class StatusBarIcon {
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
+        DEBUG("New StatusBarIcon created");
     }
     private static Bitmap getBitmap(Context ctx, Icon icon, int width, int height, Bitmap.Config cfg) {
         Drawable drawable = icon.loadDrawable(ctx);
